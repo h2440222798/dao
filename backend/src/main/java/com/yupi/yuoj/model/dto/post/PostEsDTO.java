@@ -10,9 +10,6 @@ import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 /**
  * 帖子 ES 包装类
@@ -30,7 +27,6 @@ public class PostEsDTO implements Serializable {
     /**
      * id
      */
-    @Id
     private Long id;
 
     /**
@@ -66,13 +62,11 @@ public class PostEsDTO implements Serializable {
     /**
      * 创建时间
      */
-    @Field(index = false, store = true, type = FieldType.Date, format = {}, pattern = DATE_TIME_PATTERN)
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @Field(index = false, store = true, type = FieldType.Date, format = {}, pattern = DATE_TIME_PATTERN)
     private Date updateTime;
 
     /**

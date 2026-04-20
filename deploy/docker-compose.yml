@@ -1,6 +1,6 @@
 services:
   backend:
-    image: crpi-bg707mmzowonrkt4.cn-beijing.personal.cr.aliyuncs.com/daojiawuxing/backend:${IMAGE_TAG:-latest}
+    image: crpi-bg707mmzowonrkt4.cn-beijing.personal.cr.aliyuncs.com/daojiawuxing/backend:${IMAGE_TAG}
     container_name: daojiawuxing-backend
     restart: unless-stopped
     environment:
@@ -32,7 +32,7 @@ services:
       - app-network
 
   frontend:
-    image: crpi-bg707mmzowonrkt4.cn-beijing.personal.cr.aliyuncs.com/daojiawuxing/frontend:${IMAGE_TAG:-latest}
+    image: crpi-bg707mmzowonrkt4.cn-beijing.personal.cr.aliyuncs.com/daojiawuxing/frontend:${IMAGE_TAG}
     container_name: daojiawuxing-frontend
     restart: unless-stopped
     ports:

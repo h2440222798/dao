@@ -48,9 +48,7 @@ jobs:
         with:
           context: ./frontend
           push: true
-          tags: |
-            ${{ env.FRONTEND_IMAGE }}:${{ steps.tag.outputs.TAG }}
-            ${{ env.FRONTEND_IMAGE }}:latest
+          tags: ${{ env.FRONTEND_IMAGE }}:${{ steps.tag.outputs.TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -60,9 +58,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: |
-            ${{ env.BACKEND_IMAGE }}:${{ steps.tag.outputs.TAG }}
-            ${{ env.BACKEND_IMAGE }}:latest
+          tags: ${{ env.BACKEND_IMAGE }}:${{ steps.tag.outputs.TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -113,20 +109,22 @@ jobs:
             echo "$ACR_PASSWORD" | docker login "$REGISTRY" -u "$ACR_USERNAME" --password-stdin
 
             if [ "$DEPLOY_TARGET" = "all" ] || [ "$DEPLOY_TARGET" = "frontend" ]; then
-              docker pull "${FRONTEND_IMAGE}:latest"
+              docker pull "${FRONTEND_IMAGE}:${IMAGE_TAG}"
             fi
             if [ "$DEPLOY_TARGET" = "all" ] || [ "$DEPLOY_TARGET" = "backend" ]; then
-              docker pull "${BACKEND_IMAGE}:latest"
+              docker pull "${BACKEND_IMAGE}:${IMAGE_TAG}"
             fi
 
+            export IMAGE_TAG="${IMAGE_TAG}"
             docker compose up -d --remove-orphans
 
             sleep 10
 
             docker image prune -f
-            docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" \
-              | grep "daojiawuxing" | grep -v "latest" \
-              | tail -n +4 | awk '{print $2}' \
+            # 保留最近 3 个版本的镜像，清理更早的
+            docker images --format "{{.Repository}}:{{.Tag}}" \
+              | grep "daojiawuxing" \
+              | sort -r | tail -n +4 \
               | xargs -r docker rmi -f 2>/dev/null || true
 
             echo "Deploy done! Tag: $IMAGE_TAG"
