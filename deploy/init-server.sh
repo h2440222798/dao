@@ -30,9 +30,9 @@ services:
     container_name: daojiawuxing-backend
     restart: unless-stopped
     environment:
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://${DB_HOST:-172.19.0.1}:${DB_PORT:-3306}/${DB_NAME:-daojiawuxing}?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=5000&socketTimeout=60000
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME:-daojiawuxing}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST:-172.19.0.1}
       - DB_PORT=${DB_PORT:-3306}
       - DB_NAME=${DB_NAME:-daojiawuxing}
