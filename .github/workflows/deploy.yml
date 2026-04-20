@@ -1,4 +1,4 @@
-﻿name: Build and Deploy
+name: Build and Deploy
 
 on:
   workflow_dispatch:
@@ -80,6 +80,9 @@ jobs:
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           DEPLOY_TARGET: ${{ inputs.deploy_target }}
           IMAGE_TAG: ${{ steps.tag.outputs.TAG }}
         with:
@@ -87,7 +90,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          envs: COMPOSE_B64,REGISTRY,FRONTEND_IMAGE,BACKEND_IMAGE,ACR_USERNAME,ACR_PASSWORD,DB_HOST,DB_PORT,DB_NAME,DB_USERNAME,DB_PASSWORD,DEPLOY_TARGET,IMAGE_TAG
+          envs: COMPOSE_B64,REGISTRY,FRONTEND_IMAGE,BACKEND_IMAGE,ACR_USERNAME,ACR_PASSWORD,DB_HOST,DB_PORT,DB_NAME,DB_USERNAME,DB_PASSWORD,SPRING_DATASOURCE_URL,SPRING_DATASOURCE_USERNAME,SPRING_DATASOURCE_PASSWORD,DEPLOY_TARGET,IMAGE_TAG
           script: |
             set -e
             DEPLOY_DIR="/opt/daojiawuxing"
@@ -109,12 +112,22 @@ jobs:
 
             touch .env
 
+            DB_HOST_VALUE="${DB_HOST:-172.19.0.1}"
+            DB_PORT_VALUE="${DB_PORT:-3306}"
+            DB_NAME_VALUE="${DB_NAME:-daojiawuxing}"
+            DB_USERNAME_VALUE="${DB_USERNAME:-daojiawuxing}"
+            DB_PASSWORD_VALUE="${DB_PASSWORD:-zhangsan@123}"
+            DEFAULT_JDBC_URL="jdbc:mysql://${DB_HOST_VALUE}:${DB_PORT_VALUE}/${DB_NAME_VALUE}?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=5000&socketTimeout=60000"
+
             upsert_env "APP_PORT" "${APP_PORT:-8080}"
-            upsert_env "DB_HOST" "${DB_HOST:-host.docker.internal}"
-            upsert_env "DB_PORT" "${DB_PORT:-3306}"
-            upsert_env "DB_NAME" "${DB_NAME:-daojiawuxing}"
-            upsert_env "DB_USERNAME" "${DB_USERNAME:-daojiawuxing}"
-            upsert_env "DB_PASSWORD" "${DB_PASSWORD:-zhangsan@123}"
+            upsert_env "DB_HOST" "${DB_HOST_VALUE}"
+            upsert_env "DB_PORT" "${DB_PORT_VALUE}"
+            upsert_env "DB_NAME" "${DB_NAME_VALUE}"
+            upsert_env "DB_USERNAME" "${DB_USERNAME_VALUE}"
+            upsert_env "DB_PASSWORD" "${DB_PASSWORD_VALUE}"
+            upsert_env "SPRING_DATASOURCE_URL" "${SPRING_DATASOURCE_URL:-$DEFAULT_JDBC_URL}"
+            upsert_env "SPRING_DATASOURCE_USERNAME" "${SPRING_DATASOURCE_USERNAME:-$DB_USERNAME_VALUE}"
+            upsert_env "SPRING_DATASOURCE_PASSWORD" "${SPRING_DATASOURCE_PASSWORD:-$DB_PASSWORD_VALUE}"
             upsert_env "REDIS_HOST" "${REDIS_HOST:-localhost}"
             upsert_env "REDIS_PORT" "${REDIS_PORT:-6379}"
             upsert_env "REDIS_PASSWORD" "${REDIS_PASSWORD:-}"
@@ -130,7 +143,8 @@ jobs:
             fi
 
             export IMAGE_TAG="${IMAGE_TAG}"
-            docker compose up -d --remove-orphans
+            docker compose down --remove-orphans || true
+            docker compose up -d --force-recreate --remove-orphans
 
             sleep 10
 

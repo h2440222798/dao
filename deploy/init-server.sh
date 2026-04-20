@@ -6,7 +6,7 @@
 set -e
 
 DEPLOY_DIR="/opt/daojiawuxing"
-GITHUB_USER="your-username"  # 替换为你的 GitHub 用户名
+GITHUB_USER="h2440222798"  # 替换为你的 GitHub 用户名
 
 echo "===== 1. 创建部署目录 ====="
 mkdir -p $DEPLOY_DIR
@@ -26,10 +26,13 @@ echo "===== 3. 创建 docker-compose.yml ====="
 cat > docker-compose.yml << 'COMPOSE_EOF'
 services:
   backend:
-    image: ${BACKEND_IMAGE:-ghcr.io/your-username/daojiawuxing-backend}:${IMAGE_TAG:-latest}
+    image: ${BACKEND_IMAGE:-ghcr.io/h2440222798/daojiawuxing-backend}:${IMAGE_TAG:-latest}
     container_name: daojiawuxing-backend
     restart: unless-stopped
     environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-}
       - DB_HOST=${DB_HOST:-172.19.0.1}
       - DB_PORT=${DB_PORT:-3306}
       - DB_NAME=${DB_NAME:-daojiawuxing}
@@ -77,6 +80,10 @@ services:
 networks:
   app-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/24
+          gateway: 172.19.0.1
 COMPOSE_EOF
 
 echo "===== 4. 创建 .env 配置文件 ====="
@@ -91,6 +98,9 @@ IMAGE_TAG=latest
 APP_PORT=8080
 
 # 数据库配置
+SPRING_DATASOURCE_URL=jdbc:mysql://172.19.0.1:3306/daojiawuxing?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=5000&socketTimeout=60000
+SPRING_DATASOURCE_USERNAME=daojiawuxing
+SPRING_DATASOURCE_PASSWORD=your_mysql_password
 DB_HOST=172.19.0.1
 DB_PORT=3306
 DB_NAME=daojiawuxing
