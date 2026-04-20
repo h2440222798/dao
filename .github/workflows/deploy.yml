@@ -97,7 +97,7 @@ jobs:
             echo "docker-compose.yml written ($(wc -l < docker-compose.yml) lines)"
 
             if [ ! -f .env ]; then
-              echo "APP_PORT=80"          > .env
+              echo "APP_PORT=8080"        > .env
               echo "DB_HOST=host.docker.internal" >> .env
               echo "DB_PORT=3306"        >> .env
               echo "DB_NAME=daojiawuxing" >> .env

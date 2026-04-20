@@ -62,7 +62,7 @@ services:
     container_name: daojiawuxing-frontend
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-80}:80"
+      - "${APP_PORT:-8080}:80"
     deploy:
       resources:
         limits:
@@ -90,7 +90,7 @@ BACKEND_IMAGE=ghcr.io/${GITHUB_USER}/daojiawuxing-backend
 IMAGE_TAG=latest
 
 # 应用端口
-APP_PORT=80
+APP_PORT=8080
 
 # 数据库配置
 DB_HOST=host.docker.internal
