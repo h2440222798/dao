@@ -5,10 +5,9 @@ spring:
   # 数据库配置 - 通过环境变量注入
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    # 部署时优先使用完整 JDBC URL，避免 Linux Docker 环境对 host.docker.internal 的依赖
-    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:mysql://${DB_HOST:host.docker.internal}:${DB_PORT:3306}/${DB_NAME:daojiawuxing}?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=${DB_CONNECT_TIMEOUT:5000}&socketTimeout=${DB_SOCKET_TIMEOUT:60000}}}
-    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:daojiawuxing}}
-    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:zhangsan@123}}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/daojiawuxing?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=10000&socketTimeout=60000}
+    username: ${SPRING_DATASOURCE_USERNAME:daojiawuxing}
+    password: ${SPRING_DATASOURCE_PASSWORD:zhangsan@123}
   # 使用应用内 session，无需 Redis
   session:
     store-type: none

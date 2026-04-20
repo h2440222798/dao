@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -78,7 +79,7 @@ public class DishController {
         return ResultUtils.success(dish);
     }
 
-    @PostMapping("/list/page")
+    @RequestMapping(value = "/list/page", method = {RequestMethod.GET, RequestMethod.POST})
     public BaseResponse<Page<Dish>> listDishByPage(@RequestParam(defaultValue = "1") long current,
             @RequestParam(defaultValue = "10") long pageSize, @RequestParam(required = false) String category) {
         ThrowUtils.throwIf(pageSize > 20, ErrorCode.PARAMS_ERROR);
