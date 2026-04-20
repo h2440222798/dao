@@ -66,17 +66,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Upload docker-compose to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
-          source: "deploy/docker-compose.yml,deploy/.env.example"
-          target: /opt/daojiawuxing/
-          strip_components: 1
-
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -90,10 +79,24 @@ jobs:
             mkdir -p $DEPLOY_DIR
             cd $DEPLOY_DIR
 
-            # Create .env from example if not exists
+            # Write docker-compose.yml via base64 (avoids indent/encoding issues)
+            echo 'c2VydmljZXM6CiAgYmFja2VuZDoKICAgIGltYWdlOiBjcnBpLWJnNzA3bW16b3dvbnJrdDQuY24tYmVpamluZy5wZXJzb25hbC5jci5hbGl5dW5jcy5jb20vZGFvamlhd3V4aW5nL2JhY2tlbmQ6bGF0ZXN0CiAgICBjb250YWluZXJfbmFtZTogZGFvamlhd3V4aW5nLWJhY2tlbmQKICAgIHJlc3RhcnQ6IHVubGVzcy1zdG9wcGVkCiAgICBlbnZpcm9ubWVudDoKICAgICAgLSBEQl9IT1NUPSR7REJfSE9TVDotaG9zdC5kb2NrZXIuaW50ZXJuYWx9CiAgICAgIC0gREJfUE9SVD0ke0RCX1BPUlQ6LTMzMDZ9CiAgICAgIC0gREJfTkFNRT0ke0RCX05BTUU6LWRhb2ppYXd1eGluZ30KICAgICAgLSBEQl9VU0VSTkFNRT0ke0RCX1VTRVJOQU1FOi1yb290fQogICAgICAtIERCX1BBU1NXT1JEPSR7REJfUEFTU1dPUkR9CiAgICAgIC0gUkVESVNfSE9TVD0ke1JFRElTX0hPU1Q6LWxvY2FsaG9zdH0KICAgICAgLSBSRURJU19QT1JUPSR7UkVESVNfUE9SVDotNjM3OX0KICAgICAgLSBSRURJU19QQVNTV09SRD0ke1JFRElTX1BBU1NXT1JEOi19CiAgICAgIC0gUkVESVNfREFUQUJBU0U9JHtSRURJU19EQVRBQkFTRTotMX0KICAgIGV4dHJhX2hvc3RzOgogICAgICAtICJob3N0LmRvY2tlci5pbnRlcm5hbDpob3N0LWdhdGV3YXkiCiAgICBkZXBsb3k6CiAgICAgIHJlc291cmNlczoKICAgICAgICBsaW1pdHM6CiAgICAgICAgICBjcHVzOiAiMS41IgogICAgICAgICAgbWVtb3J5OiA3NjhNCiAgICAgICAgcmVzZXJ2YXRpb25zOgogICAgICAgICAgbWVtb3J5OiAyNTZNCiAgICBoZWFsdGhjaGVjazoKICAgICAgdGVzdDogWyJDTUQiLCAiY3VybCIsICItZiIsICJodHRwOi8vbG9jYWxob3N0OjgxMDEvYXBpL2RvYy5odG1sIl0KICAgICAgaW50ZXJ2YWw6IDMwcwogICAgICB0aW1lb3V0OiAxMHMKICAgICAgcmV0cmllczogMwogICAgICBzdGFydF9wZXJpb2Q6IDYwcwogICAgbmV0d29ya3M6CiAgICAgIC0gYXBwLW5ldHdvcmsKCiAgZnJvbnRlbmQ6CiAgICBpbWFnZTogY3JwaS1iZzcwN21tem93b25ya3Q0LmNuLWJlaWppbmcucGVyc29uYWwuY3IuYWxpeXVuY3MuY29tL2Rhb2ppYXd1eGluZy9mcm9udGVuZDpsYXRlc3QKICAgIGNvbnRhaW5lcl9uYW1lOiBkYW9qaWF3dXhpbmctZnJvbnRlbmQKICAgIHJlc3RhcnQ6IHVubGVzcy1zdG9wcGVkCiAgICBwb3J0czoKICAgICAgLSAiJHtBUFBfUE9SVDotODB9OjgwIgogICAgZGVwbG95OgogICAgICByZXNvdXJjZXM6CiAgICAgICAgbGltaXRzOgogICAgICAgICAgY3B1czogIjAuNSIKICAgICAgICAgIG1lbW9yeTogMTI4TQogICAgICAgIHJlc2VydmF0aW9uczoKICAgICAgICAgIG1lbW9yeTogMzJNCiAgICBkZXBlbmRzX29uOgogICAgICBiYWNrZW5kOgogICAgICAgIGNvbmRpdGlvbjogc2VydmljZV9zdGFydGVkCiAgICBuZXR3b3JrczoKICAgICAgLSBhcHAtbmV0d29yawoKbmV0d29ya3M6CiAgYXBwLW5ldHdvcms6CiAgICBkcml2ZXI6IGJyaWRnZQ==' | base64 -d > docker-compose.yml
+
+            # Create .env if not exists
             if [ ! -f .env ]; then
-              cp .env.example .env
-              echo ".env created from .env.example - please update DB_PASSWORD!"
+              cat > .env << 'ENV_EOF'
+APP_PORT=80
+DB_HOST=host.docker.internal
+DB_PORT=3306
+DB_NAME=daojiawuxing
+DB_USERNAME=root
+DB_PASSWORD=your_mysql_password
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+REDIS_DATABASE=1
+ENV_EOF
+              echo "WARN: .env created - update DB_PASSWORD on server: vi $DEPLOY_DIR/.env"
             fi
 
             docker login ${{ env.REGISTRY }} \
