@@ -33,12 +33,12 @@ public interface PostService extends IService<Post> {
     QueryWrapper<Post> getQueryWrapper(PostQueryRequest postQueryRequest);
 
     /**
-     * 从 ES 查询
+     * 分页搜索帖子
      *
      * @param postQueryRequest
      * @return
      */
-    Page<Post> searchFromEs(PostQueryRequest postQueryRequest);
+    Page<Post> searchPost(PostQueryRequest postQueryRequest);
 
     /**
      * 获取帖子封装

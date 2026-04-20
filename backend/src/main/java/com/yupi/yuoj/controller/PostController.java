@@ -197,7 +197,7 @@ public class PostController {
     // endregion
 
     /**
-     * 分页搜索（从 ES 查询，封装类）
+     * 分页搜索帖子列表
      *
      * @param postQueryRequest
      * @param request
@@ -209,7 +209,7 @@ public class PostController {
         long size = postQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        Page<Post> postPage = postService.searchFromEs(postQueryRequest);
+        Page<Post> postPage = postService.searchPost(postQueryRequest);
         return ResultUtils.success(postService.getPostVOPage(postPage, request));
     }
 

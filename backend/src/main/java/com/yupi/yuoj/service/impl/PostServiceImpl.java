@@ -119,8 +119,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     }
 
     @Override
-    public Page<Post> searchFromEs(PostQueryRequest postQueryRequest) {
-        // ES 未启用，降级为 MySQL 查询
+    public Page<Post> searchPost(PostQueryRequest postQueryRequest) {
         long current = postQueryRequest.getCurrent();
         long pageSize = postQueryRequest.getPageSize();
         Page<Post> page = new Page<>(current, pageSize);
