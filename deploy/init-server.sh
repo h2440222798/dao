@@ -30,17 +30,15 @@ services:
     container_name: daojiawuxing-backend
     restart: unless-stopped
     environment:
-      - DB_HOST=${DB_HOST:-host.docker.internal}
+      - DB_HOST=${DB_HOST:-172.19.0.1}
       - DB_PORT=${DB_PORT:-3306}
       - DB_NAME=${DB_NAME:-daojiawuxing}
-      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_USERNAME=${DB_USERNAME:-daojiawuxing}
       - DB_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=${REDIS_HOST:-localhost}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - REDIS_PASSWORD=${REDIS_PASSWORD:-}
       - REDIS_DATABASE=${REDIS_DATABASE:-1}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     deploy:
       resources:
         limits:
@@ -93,10 +91,10 @@ IMAGE_TAG=latest
 APP_PORT=8080
 
 # 数据库配置
-DB_HOST=host.docker.internal
+DB_HOST=172.19.0.1
 DB_PORT=3306
 DB_NAME=daojiawuxing
-DB_USERNAME=root
+DB_USERNAME=daojiawuxing
 DB_PASSWORD=your_mysql_password
 
 # Redis（可选）
