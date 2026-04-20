@@ -1,10 +1,10 @@
-name: Build and Deploy
+﻿name: Build and Deploy
 
 on:
   workflow_dispatch:
     inputs:
       deploy_target:
-        description: '部署目标'
+        description: 'Deploy target (all / frontend / backend)'
         required: true
         default: 'all'
         type: choice
@@ -14,7 +14,6 @@ on:
           - backend
 
 env:
-  # 阿里云 ACR 镜像地址
   REGISTRY: crpi-bg707mmzowonrkt4.cn-beijing.personal.cr.aliyuncs.com
   FRONTEND_IMAGE: crpi-bg707mmzowonrkt4.cn-beijing.personal.cr.aliyuncs.com/daojiawuxing/frontend
   BACKEND_IMAGE: crpi-bg707mmzowonrkt4.cn-beijing.personal.cr.aliyuncs.com/daojiawuxing/backend
@@ -43,7 +42,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # ===== 前端构建 =====
       - name: Build and push frontend
         if: inputs.deploy_target == 'all' || inputs.deploy_target == 'frontend'
         uses: docker/build-push-action@v6
@@ -56,7 +54,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # ===== 后端构建 =====
       - name: Build and push backend
         if: inputs.deploy_target == 'all' || inputs.deploy_target == 'backend'
         uses: docker/build-push-action@v6
@@ -69,8 +66,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # ===== 部署到云服务器 =====
-      - name: Deploy to server
+      - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -83,12 +79,10 @@ jobs:
             mkdir -p $DEPLOY_DIR
             cd $DEPLOY_DIR
 
-            # 登录阿里云 ACR
             docker login ${{ env.REGISTRY }} \
               -u ${{ secrets.ACR_USERNAME }} \
               -p ${{ secrets.ACR_PASSWORD }}
 
-            # 拉取最新镜像
             if [ "${{ inputs.deploy_target }}" = "all" ] || [ "${{ inputs.deploy_target }}" = "frontend" ]; then
               docker pull ${{ env.FRONTEND_IMAGE }}:latest
             fi
@@ -96,17 +90,14 @@ jobs:
               docker pull ${{ env.BACKEND_IMAGE }}:latest
             fi
 
-            # 启动/更新服务
             docker compose up -d --remove-orphans
 
-            # 等待服务就绪
             sleep 10
 
-            # 清理旧镜像（保留最近 3 个时间戳版本，清理悬空镜像）
             docker image prune -f
             docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" \
               | grep "daojiawuxing" | grep -v "latest" \
               | tail -n +4 | awk '{print $2}' \
               | xargs -r docker rmi -f 2>/dev/null || true
 
-            echo "部署完成！时间戳: ${{ steps.tag.outputs.TAG }}"
+            echo "Deploy done! Tag: ${{ steps.tag.outputs.TAG }}"
