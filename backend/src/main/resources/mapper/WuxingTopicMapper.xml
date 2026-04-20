@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.yuoj.mapper.WuxingTopicMapper">
+
+    <resultMap id="BaseResultMap" type="com.yupi.yuoj.model.entity.WuxingTopic">
+            <id property="id" column="id" />
+            <result property="topickey" column="topicKey" />
+            <result property="name" column="name" />
+            <result property="organ" column="organ" />
+            <result property="season" column="season" />
+            <result property="color" column="color" />
+            <result property="intro" column="intro" />
+            <result property="dietfocus" column="dietFocus" />
+            <result property="dietrecipes" column="dietRecipes" />
+            <result property="emotionfocus" column="emotionFocus" />
+            <result property="emotionsteps" column="emotionSteps" />
+            <result property="bodyfocus" column="bodyFocus" />
+            <result property="bodyexercise" column="bodyExercise" />
+            <result property="practicefocus" column="practiceFocus" />
+            <result property="seasonaltips" column="seasonalTips" />
+            <result property="dailyadvice" column="dailyAdvice" />
+            <result property="sort" column="sort" />
+            <result property="createtime" column="createTime" />
+            <result property="updatetime" column="updateTime" />
+            <result property="isdelete" column="isDelete" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,topicKey,name,organ,season,color,
+        intro,dietFocus,dietRecipes,emotionFocus,emotionSteps,
+        bodyFocus,bodyExercise,practiceFocus,seasonalTips,dailyAdvice,
+        sort,createTime,updateTime,isDelete
+    </sql>
+</mapper>

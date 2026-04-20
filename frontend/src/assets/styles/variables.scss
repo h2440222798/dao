@@ -1,0 +1,138 @@
+// AI问道 - 全局变量
+// 华夏老祖宗智慧：五色对应五脏，五行调和阴阳
+
+// ========== 基础色系 ==========
+// 主色：草木绿、浅青 - 代表木行，主生发
+$primary: #5a8f6e;
+$primary-light: #7fb38f;
+$primary-dark: #3d6b4e;
+$primary-pale: #e8f5ec;
+
+// 辅助色
+$secondary: #f5f1e8; // 米白
+$accent: #c9b896;    // 浅棕
+$gold: #d4af37;      // 淡金
+
+// ========== 五行五色 ==========
+// 木 - 青 - 肝
+$wood: #5a8f6e;
+$wood-light: #8fbc8f;
+$wood-dark: #2f4f2f;
+
+// 火 - 红 - 心
+$fire: #c75b39;
+$fire-light: #e07a5f;
+$fire-dark: #9c3d1f;
+
+// 土 - 黄 - 脾
+$earth: #d4a574;
+$earth-light: #e8c9a0;
+$earth-dark: #a67c52;
+
+// 金 - 白 - 肺
+$metal: #e8e8e8;
+$metal-light: #f5f5f5;
+$metal-dark: #b8b8b8;
+
+// 水 - 黑 - 肾
+$water: #2c3e50;
+$water-light: #4a6278;
+$water-dark: #1a252f;
+
+// ========== 中性色 ==========
+$white: #ffffff;
+$gray-100: #faf9f7;
+$gray-200: #f0ede8;
+$gray-300: #e0dcd4;
+$gray-400: #b8b4ac;
+$gray-500: #8a8680;
+$gray-600: #6a665f;
+$gray-700: #4a4640;
+$gray-800: #2a2620;
+$black: #1a1814;
+
+// ========== 功能色 ==========
+$success: $wood;
+$warning: $earth;
+$danger: $fire;
+$info: $water;
+
+// ========== 文字色 ==========
+$text-primary: $gray-800;
+$text-secondary: $gray-600;
+$text-muted: $gray-400;
+$text-inverse: $white;
+
+// ========== 背景色 ==========
+$bg-primary: $gray-100;
+$bg-secondary: $secondary;
+$bg-card: $white;
+
+// ========== 边框色 ==========
+$border-color: $gray-300;
+
+// ========== 字体 ==========
+$font-family-base: 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+$font-family-title: 'STSong', 'SimSun', 'Noto Serif SC', serif;
+
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-md: 18px;
+$font-size-lg: 20px;
+$font-size-xl: 24px;
+$font-size-2xl: 32px;
+$font-size-3xl: 40px;
+$font-size-4xl: 48px;
+
+$line-height-tight: 1.25;
+$line-height-base: 1.6;
+$line-height-loose: 1.8;
+
+// ========== 间距 ==========
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+$spacing-3xl: 64px;
+$spacing-4xl: 96px;
+
+// ========== 圆角 ==========
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-full: 9999px;
+
+// ========== 阴影 ==========
+$shadow-sm: 0 1px 2px rgba($gray-800, 0.05);
+$shadow-md: 0 4px 6px rgba($gray-800, 0.07);
+$shadow-lg: 0 10px 15px rgba($gray-800, 0.1);
+$shadow-xl: 0 20px 25px rgba($gray-800, 0.1);
+
+// ========== 过渡 ==========
+$transition-fast: 150ms ease;
+$transition-base: 250ms ease;
+$transition-slow: 350ms ease;
+
+// ========== 断点 ==========
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// ========== 容器 ==========
+$container-max: 1280px;
+$container-padding: $spacing-lg;
+
+// ========== Z-Index ==========
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;

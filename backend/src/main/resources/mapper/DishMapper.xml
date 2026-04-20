@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.yuoj.mapper.DishMapper">
+
+    <resultMap id="BaseResultMap" type="com.yupi.yuoj.model.entity.Dish">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="subtitle" column="subtitle" />
+            <result property="description" column="description" />
+            <result property="image" column="image" />
+            <result property="category" column="category" />
+            <result property="organ" column="organ" />
+            <result property="ingredients" column="ingredients" />
+            <result property="calories" column="calories" />
+            <result property="protein" column="protein" />
+            <result property="fat" column="fat" />
+            <result property="carbs" column="carbs" />
+            <result property="fiber" column="fiber" />
+            <result property="antiinflammatory" column="antiInflammatory" />
+            <result property="taoistbenefits" column="taoistBenefits" />
+            <result property="cookingmethod" column="cookingMethod" />
+            <result property="cooktime" column="cookTime" />
+            <result property="difficulty" column="difficulty" />
+            <result property="suitableconstitution" column="suitableConstitution" />
+            <result property="unsuitableconstitution" column="unsuitableConstitution" />
+            <result property="wisdomquote" column="wisdomQuote" />
+            <result property="likes" column="likes" />
+            <result property="favorites" column="favorites" />
+            <result property="createtime" column="createTime" />
+            <result property="updatetime" column="updateTime" />
+            <result property="isdelete" column="isDelete" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,subtitle,description,image,category,
+        organ,ingredients,calories,protein,fat,
+        carbs,fiber,antiInflammatory,taoistBenefits,cookingMethod,
+        cookTime,difficulty,suitableConstitution,unsuitableConstitution,wisdomQuote,
+        likes,favorites,createTime,updateTime,isDelete
+    </sql>
+</mapper>

@@ -1,0 +1,259 @@
+-- 数据库创建
+CREATE DATABASE IF NOT EXISTS `daojiawuxing` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `daojiawuxing`;
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for user
+-- ----------------------------
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `userAccount` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '账号',
+  `userPassword` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
+  `unionId` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '微信开放平台id',
+  `mpOpenId` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '公众号openId',
+  `userName` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户昵称',
+  `userAvatar` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户头像',
+  `userEmail` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户邮箱',
+  `userProfile` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户简介',
+  `userRole` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user' COMMENT '用户角色：user/admin',
+  `wood` tinyint unsigned NOT NULL DEFAULT '20' COMMENT '五行体质-木',
+  `fire` tinyint unsigned NOT NULL DEFAULT '20' COMMENT '五行体质-火',
+  `earth` tinyint unsigned NOT NULL DEFAULT '20' COMMENT '五行体质-土',
+  `metal` tinyint unsigned NOT NULL DEFAULT '20' COMMENT '五行体质-金',
+  `water` tinyint unsigned NOT NULL DEFAULT '20' COMMENT '五行体质-水',
+  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `isDelete` tinyint NOT NULL DEFAULT '0' COMMENT '是否删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_userAccount` (`userAccount`),
+  UNIQUE KEY `idx_unionId` (`unionId`),
+  UNIQUE KEY `idx_userEmail` (`userEmail`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
+
+-- ----------------------------
+-- Table structure for dish
+-- ----------------------------
+DROP TABLE IF EXISTS `dish`;
+CREATE TABLE `dish` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '菜品名称',
+  `subtitle` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '副标题',
+  `description` text COLLATE utf8mb4_unicode_ci COMMENT '描述',
+  `image` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图片链接',
+  `category` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '五行分类(wood/fire/earth/metal/water)',
+  `organ` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '对应脏腑',
+  `ingredients` json DEFAULT NULL COMMENT '食材列表(JSON数组)',
+  `calories` int DEFAULT '0' COMMENT '营养成分-卡路里',
+  `protein` float DEFAULT '0' COMMENT '营养成分-蛋白质',
+  `fat` float DEFAULT '0' COMMENT '营养成分-脂肪',
+  `carbs` float DEFAULT '0' COMMENT '营养成分-碳水化合物',
+  `fiber` float DEFAULT '0' COMMENT '营养成分-膳食纤维',
+  `antiInflammatory` json DEFAULT NULL COMMENT '抗炎功效(JSON数组)',
+  `taoistBenefits` json DEFAULT NULL COMMENT '道家养生功效(JSON数组)',
+  `cookingMethod` text COLLATE utf8mb4_unicode_ci COMMENT '烹饪方法',
+  `cookTime` int DEFAULT '0' COMMENT '烹饪时间(分钟)',
+  `difficulty` int DEFAULT '1' COMMENT '难度 1-5',
+  `suitableConstitution` json DEFAULT NULL COMMENT '适合体质(JSON数组)',
+  `unsuitableConstitution` json DEFAULT NULL COMMENT '不适合体质(JSON数组)',
+  `wisdomQuote` text COLLATE utf8mb4_unicode_ci COMMENT '华夏智慧格言',
+  `likes` int DEFAULT '0' COMMENT '点赞数',
+  `favorites` int DEFAULT '0' COMMENT '收藏数',
+  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `isDelete` tinyint NOT NULL DEFAULT '0' COMMENT '是否删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_category` (`category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='菜品表';
+
+-- ----------------------------
+-- Table structure for diary
+-- ----------------------------
+DROP TABLE IF EXISTS `diary`;
+CREATE TABLE `diary` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `userId` bigint NOT NULL COMMENT '用户 id',
+  `title` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '标题',
+  `content` text COLLATE utf8mb4_unicode_ci COMMENT '内容',
+  `images` json DEFAULT NULL COMMENT '图片列表(JSON数组)',
+  `tags` json DEFAULT NULL COMMENT '标签列表(JSON数组)',
+  `dietScore` int DEFAULT '0' COMMENT '今日饮食评分',
+  `energy` int DEFAULT '0' COMMENT '身体状态-精力',
+  `mood` int DEFAULT '0' COMMENT '身体状态-情绪',
+  `sleep` int DEFAULT '0' COMMENT '身体状态-睡眠',
+  `digestion` int DEFAULT '0' COMMENT '身体状态-消化',
+  `practices` json DEFAULT NULL COMMENT '今日践行(JSON数组)',
+  `wisdomInsight` text COLLATE utf8mb4_unicode_ci COMMENT '华夏智慧感悟',
+  `likes` int DEFAULT '0' COMMENT '点赞数',
+  `isApproved` tinyint NOT NULL DEFAULT '1' COMMENT '是否审核通过',
+  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `isDelete` tinyint NOT NULL DEFAULT '0' COMMENT '是否删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='抗炎日记表';
+
+-- ----------------------------
+-- Table structure for diary_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `diary_comment`;
+CREATE TABLE `diary_comment` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `diaryId` bigint NOT NULL COMMENT '日记 id',
+  `userId` bigint NOT NULL COMMENT '用户 id',
+  `content` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容',
+  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `isDelete` tinyint NOT NULL DEFAULT '0' COMMENT '是否删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_diaryId` (`diaryId`),
+  KEY `idx_userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='日记评论表';
+
+-- ----------------------------
+-- Table structure for dish_favorite
+-- ----------------------------
+DROP TABLE IF EXISTS `dish_favorite`;
+CREATE TABLE `dish_favorite` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `dishId` bigint NOT NULL COMMENT '菜品 id',
+  `userId` bigint NOT NULL COMMENT '用户 id',
+  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_dishId` (`dishId`),
+  KEY `idx_userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='菜品收藏关联表';
+
+-- ----------------------------
+-- Seed data for dish
+-- ----------------------------
+DELETE FROM `dish`
+WHERE `name` IN (
+  '道家五行抗炎蔬菜汤',
+  '五行养肝青蔬汤',
+  '五行养心番茄甜椒汤',
+  '哈佛蔬菜汤',
+  '地中海鹰嘴豆蔬菜汤',
+  '地中海橄榄油烤时蔬藜麦碗'
+);
+
+INSERT INTO `dish` (
+  `name`, `subtitle`, `description`, `image`, `category`, `organ`, `ingredients`,
+  `calories`, `protein`, `fat`, `carbs`, `fiber`, `antiInflammatory`, `taoistBenefits`,
+  `cookingMethod`, `cookTime`, `difficulty`, `suitableConstitution`, `unsuitableConstitution`,
+  `wisdomQuote`, `likes`, `favorites`
+) VALUES
+(
+  '道家五行抗炎蔬菜汤',
+  '五色入五脏，温和抗炎',
+  '以番茄、白萝卜、西芹、胡萝卜、香菇等五色蔬菜为基础，兼顾清润、温养与高纤维特点，适合作为道家五行抗炎饮食的日常基础汤。汤体清爽，负担轻，既可帮助控制总热量，又利于长期执行。',
+  'https://images.unsplash.com/photo-1547592180-85f173990554?w=1200',
+  'earth',
+  '脾',
+  '["番茄 120g","白萝卜 80g","西芹 80g","胡萝卜 80g","洋葱 60g","香菇 50g","姜片 3片"]',
+  96, 4.8, 1.2, 18.5, 6.1,
+  '["高纤维组合有助于改善肠道炎症环境","番茄与菌菇富含抗氧化成分","低油低盐适合慢性炎症人群长期食用"]',
+  '["五色配伍以应五行，帮助整体调和","温养中焦，减轻脾胃负担","适合日常清养与季节交替调理"]',
+  '1. 番茄、白萝卜、胡萝卜切块，西芹切段，洋葱切丝，香菇切片；2. 少量橄榄油煸香洋葱和姜片；3. 放入其余蔬菜翻炒 2 分钟后加清水；4. 中小火煮 20 分钟，最后少量海盐调味即可。',
+  30, 1,
+  '["湿热体质","熬夜上火","久坐少动人群"]',
+  '["脾胃极虚寒","急性腹泻期"]',
+  '《黄帝内经》有言：五色入五脏。饮食调和，不偏不倚，方能久养正气。',
+  128, 73
+),
+(
+  '五行养肝青蔬汤',
+  '青色入肝，疏肝解郁',
+  '以西兰花、菠菜、芹菜和毛豆构成青绿色基底，突出春养肝木的理念。适合情绪郁闷、久看屏幕、眼干口苦的人群作为轻食晚餐或工作日午汤。',
+  'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200',
+  'wood',
+  '肝',
+  '["西兰花 120g","菠菜 80g","芹菜 80g","毛豆 60g","苹果醋 5ml","姜片 2片"]',
+  102, 6.9, 2.0, 15.7, 5.8,
+  '["深绿叶菜富含叶酸和多酚","西兰花中的萝卜硫素有助于抗炎","高钾低脂有利于减轻水肿与疲劳"]',
+  '["疏肝理气，帮助情志舒展","青色养肝，适合春季顺时调养","清而不寒，适合轻断食和清养周期"]',
+  '1. 西兰花掰小朵，菠菜焯水备用；2. 芹菜切段，毛豆煮熟；3. 清水加姜片煮开，放入西兰花、芹菜煮 6 分钟；4. 加毛豆与菠菜再煮 2 分钟；5. 出锅前少量盐和苹果醋提味。',
+  18, 1,
+  '["肝火偏旺","眼疲劳","情绪紧绷"]',
+  '["胃寒明显","术后虚弱初期"]',
+  '春宜养肝，肝喜条达。青蔬和之，则气机舒展，目亦得养。',
+  86, 44
+),
+(
+  '五行养心番茄甜椒汤',
+  '红色入心，轻盈暖身',
+  '以番茄、红甜椒、红腰豆为核心，兼顾植物蛋白与番茄红素，适合作为火行养心的抗炎暖汤。口感酸甜清爽，适合秋冬或运动后补充。',
+  'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=1200',
+  'fire',
+  '心',
+  '["番茄 200g","红甜椒 100g","红腰豆 80g","洋葱 50g","蒜末 10g","黑胡椒 少许"]',
+  118, 6.2, 1.8, 20.4, 6.4,
+  '["番茄红素和维生素 C 共同提升抗氧化能力","豆类提供稳定植物蛋白与可溶性膳食纤维","低饱和脂肪有助于心血管友好"]',
+  '["赤色养心，帮助温养心气","清补兼施，适合压力大时调理","适合搭配粗粮主食形成完整抗炎餐盘"]',
+  '1. 番茄去皮切块，甜椒切丁，洋葱切碎；2. 少量橄榄油炒香洋葱和蒜末；3. 加番茄煮出汁后加入甜椒和红腰豆；4. 加适量清水小火煮 15 分钟，最后黑胡椒调味。',
+  22, 2,
+  '["压力大","心烦易燥","需要控制油脂摄入者"]',
+  '["胃酸反流明显","腹胀严重时"]',
+  '心主血脉，色赤入心。善用天然食材之色味，可助内外相应。',
+  93, 51
+),
+(
+  '哈佛蔬菜汤',
+  '高纤轻负担的经典蔬菜组合',
+  '参考哈佛健康饮食理念，以十字花科、番茄、洋葱、南瓜和胡萝卜构成高纤、低热量、低负担的蔬菜汤。适合作为体重管理、清淡饮食和术后恢复期的基础蔬菜摄入方案。',
+  'https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=1200',
+  'earth',
+  '脾',
+  '["卷心菜 150g","番茄 150g","洋葱 80g","南瓜 100g","胡萝卜 80g","西芹 60g"]',
+  109, 4.1, 1.5, 22.8, 7.2,
+  '["多样化蔬菜提高植化素摄入","低热量高饱腹感利于减重期抗炎","十字花科与橙红色蔬菜协同抗氧化"]',
+  '["清淡而有饱足感，便于长期坚持","养脾和胃，适合晚餐轻断食","适合作为抗炎饮食的入门菜品"]',
+  '1. 所有蔬菜切块；2. 洋葱下锅略炒出香；3. 加入番茄、卷心菜、南瓜、胡萝卜、西芹；4. 加水后中火煮 25 分钟；5. 根据口味加入少量海盐和黑胡椒。',
+  35, 1,
+  '["体重管理人群","三高风险人群","饮食油腻后调理"]',
+  '["过度消瘦且食量不足者可搭配蛋白质主菜"]',
+  '食不过精，味不过厚。蔬菜为本，久服则身轻气和。',
+  176, 109
+),
+(
+  '地中海鹰嘴豆蔬菜汤',
+  '橄榄油与豆类的抗炎组合',
+  '结合地中海饮食中的橄榄油、鹰嘴豆、番茄、洋葱与香草，以植物蛋白和单不饱和脂肪酸为特色，适合希望兼顾饱腹感和炎症管理的人群。',
+  'https://images.unsplash.com/photo-1608500218890-c4f2cc74996b?w=1200',
+  'fire',
+  '心',
+  '["鹰嘴豆 120g","番茄 150g","胡萝卜 70g","洋葱 60g","橄榄油 8ml","牛至碎 2g"]',
+  186, 8.7, 5.1, 24.3, 7.5,
+  '["橄榄油中的单不饱和脂肪酸有助于抗炎","鹰嘴豆提升饱腹感并稳定餐后血糖","地中海香草有助于减少额外盐分依赖"]',
+  '["和胃养气，适合替代高油浓汤","心脉喜和，此汤清润不腻","适合做工作日晚餐主食化汤品"]',
+  '1. 鹰嘴豆提前浸泡煮熟；2. 洋葱碎用橄榄油炒香；3. 加番茄、胡萝卜翻炒出汁；4. 加入鹰嘴豆与清水煮 15 分钟；5. 出锅前加入牛至碎和黑胡椒。',
+  28, 2,
+  '["控糖控脂人群","久坐办公人群","需要提升饱腹感者"]',
+  '["豆类消化能力弱且腹胀明显者"]',
+  '地中海饮食贵在简、鲜、和，道家饮食贵在顺、缓、久，二者皆重日用之养。',
+  142, 82
+),
+(
+  '地中海橄榄油烤时蔬藜麦碗',
+  '彩色蔬菜与全谷物的清洁餐',
+  '以彩椒、西葫芦、茄子、圣女果搭配藜麦，突出地中海饮食中的彩色蔬菜、橄榄油和全谷物理念。适合午餐、减脂期和训练后恢复餐。',
+  'https://images.unsplash.com/photo-1543332164-6e82f355badc?w=1200',
+  'metal',
+  '肺',
+  '["藜麦 80g","彩椒 120g","西葫芦 100g","茄子 80g","圣女果 80g","橄榄油 10ml"]',
+  214, 7.5, 6.8, 28.6, 6.9,
+  '["全谷物搭配彩色蔬菜有助于稳定炎症指标","橄榄油替代动物油可减少饱和脂肪","高钾高纤适合清淡抗炎饮食"]',
+  '["肺喜清肃，少油少腻更利气机","彩蔬配全谷，利于轻身养气","适合作为四时常备的清洁餐模板"]',
+  '1. 藜麦洗净煮熟备用；2. 彩椒、西葫芦、茄子切块后拌橄榄油；3. 烤箱 200 度烤 18 分钟；4. 加入圣女果再烤 5 分钟；5. 与藜麦混合，撒少许海盐和黑胡椒即可。',
+  30, 2,
+  '["减脂期","高油饮食后调理","久咳痰黏需清淡饮食者"]',
+  '["脾胃特别虚寒者建议热食并减少生冷配料"]',
+  '饮食之道，不在猎奇，而在常行。清简可久，五味得和，则形神自安。',
+  118, 67
+);
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.yuoj.mapper.UserCheckinMapper">
+
+    <resultMap id="BaseResultMap" type="com.yupi.yuoj.model.entity.UserCheckin">
+            <id property="id" column="id" />
+            <result property="userid" column="userId" />
+            <result property="recorddate" column="recordDate" />
+            <result property="dietdone" column="dietDone" />
+            <result property="practicedone" column="practiceDone" />
+            <result property="moodstable" column="moodStable" />
+            <result property="restenough" column="restEnough" />
+            <result property="practicetypes" column="practiceTypes" />
+            <result property="sleepscore" column="sleepScore" />
+            <result property="moodscore" column="moodScore" />
+            <result property="balancescore" column="balanceScore" />
+            <result property="completedcount" column="completedCount" />
+            <result property="note" column="note" />
+            <result property="createtime" column="createTime" />
+            <result property="updatetime" column="updateTime" />
+            <result property="isdelete" column="isDelete" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,recordDate,dietDone,practiceDone,moodStable,
+        restEnough,practiceTypes,sleepScore,moodScore,balanceScore,
+        completedCount,note,createTime,updateTime,isDelete
+    </sql>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.yuoj.mapper.CognitionOriginMapper">
+
+    <resultMap id="BaseResultMap" type="com.yupi.yuoj.model.entity.CognitionOrigin">
+            <id property="id" column="id" />
+            <result property="originkey" column="originKey" />
+            <result property="title" column="title" />
+            <result property="source" column="source" />
+            <result property="color" column="color" />
+            <result property="summary" column="summary" />
+            <result property="principles" column="principles" />
+            <result property="practices" column="practices" />
+            <result property="sort" column="sort" />
+            <result property="createtime" column="createTime" />
+            <result property="updatetime" column="updateTime" />
+            <result property="isdelete" column="isDelete" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,originKey,title,source,color,summary,
+        principles,practices,sort,createTime,updateTime,
+        isDelete
+    </sql>
+</mapper>
