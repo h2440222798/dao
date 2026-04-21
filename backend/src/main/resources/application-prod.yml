@@ -5,8 +5,8 @@ spring:
   # 数据库配置 - 通过环境变量注入
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/daojiawuxing?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=10000&socketTimeout=60000}
-    username: ${SPRING_DATASOURCE_USERNAME:daojiawuxing}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://101.34.246.109:3306/daojiawuxing?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=10000&socketTimeout=60000}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:zhangsan@123}
   # 使用应用内 session，无需 Redis
   session:
