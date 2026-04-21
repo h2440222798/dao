@@ -10,7 +10,7 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD:-zhangsan@123}
     volumes:
       - mysql-data:/var/lib/mysql
-      - ../backend/sql:/docker-entrypoint-initdb.d
+      - ./sql:/docker-entrypoint-initdb.d:ro
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-time-zone='+08:00'
     deploy:
       resources:

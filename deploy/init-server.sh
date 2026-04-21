@@ -25,30 +25,43 @@ fi
 echo "===== 3. 创建 docker-compose.yml ====="
 cat > docker-compose.yml << 'COMPOSE_EOF'
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: daojiawuxing-mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root123456}
+      - MYSQL_DATABASE=${DB_NAME:-daojiawuxing}
+      - MYSQL_USER=${DB_USERNAME:-daojiawuxing}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-zhangsan@123}
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-time-zone='+08:00'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root123456}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
+
   backend:
     image: ${BACKEND_IMAGE:-ghcr.io/h2440222798/daojiawuxing-backend}:${IMAGE_TAG:-latest}
     container_name: daojiawuxing-backend
     restart: unless-stopped
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://${DB_HOST:-172.19.0.1}:${DB_PORT:-3306}/${DB_NAME:-daojiawuxing}?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=5000&socketTimeout=60000
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${DB_NAME:-daojiawuxing}?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=10000&socketTimeout=60000
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME:-daojiawuxing}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=${DB_HOST:-172.19.0.1}
-      - DB_PORT=${DB_PORT:-3306}
-      - DB_NAME=${DB_NAME:-daojiawuxing}
-      - DB_USERNAME=${DB_USERNAME:-daojiawuxing}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-zhangsan@123}
       - REDIS_HOST=${REDIS_HOST:-localhost}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - REDIS_PASSWORD=${REDIS_PASSWORD:-}
       - REDIS_DATABASE=${REDIS_DATABASE:-1}
-    deploy:
-      resources:
-        limits:
-          cpus: "1.5"
-          memory: 768M
-        reservations:
-          memory: 256M
+    depends_on:
+      mysql:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8101/api/doc.html"]
       interval: 30s
@@ -59,32 +72,26 @@ services:
       - app-network
 
   frontend:
-    image: ${FRONTEND_IMAGE:-ghcr.io/your-username/daojiawuxing-frontend}:${IMAGE_TAG:-latest}
+    image: ${FRONTEND_IMAGE:-ghcr.io/h2440222798/daojiawuxing-frontend}:${IMAGE_TAG:-latest}
     container_name: daojiawuxing-frontend
     restart: unless-stopped
     ports:
       - "${APP_PORT:-8080}:80"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 128M
-        reservations:
-          memory: 32M
     depends_on:
       backend:
         condition: service_started
     networks:
       - app-network
 
+volumes:
+  mysql-data:
+
 networks:
   app-network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.19.0.0/24
-          gateway: 172.19.0.1
 COMPOSE_EOF
+
+mkdir -p sql
 
 echo "===== 4. 创建 .env 配置文件 ====="
 if [ ! -f .env ]; then
@@ -98,10 +105,11 @@ IMAGE_TAG=latest
 APP_PORT=8080
 
 # 数据库配置
-SPRING_DATASOURCE_URL=jdbc:mysql://172.19.0.1:3306/daojiawuxing?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=5000&socketTimeout=60000
+SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/daojiawuxing?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=10000&socketTimeout=60000
 SPRING_DATASOURCE_USERNAME=daojiawuxing
 SPRING_DATASOURCE_PASSWORD=your_mysql_password
-DB_HOST=172.19.0.1
+DB_ROOT_PASSWORD=root123456
+DB_HOST=mysql
 DB_PORT=3306
 DB_NAME=daojiawuxing
 DB_USERNAME=daojiawuxing
@@ -123,5 +131,5 @@ echo ""
 echo "===== 初始化完成 ====="
 echo "请执行以下步骤："
 echo "1. 编辑 .env 文件填入实际配置: vi $DEPLOY_DIR/.env"
-echo "2. 确保 MySQL 已创建 daojiawuxing 数据库"
+echo "2. 将 SQL 初始化文件放到 $DEPLOY_DIR/sql 目录"
 echo "3. 在 GitHub Actions 中手动触发 Build and Deploy 工作流"

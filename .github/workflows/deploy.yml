@@ -66,6 +66,28 @@ jobs:
         id: compose
         run: echo "B64=$(base64 -w0 deploy/docker-compose.yml)" >> $GITHUB_OUTPUT
 
+      - name: Prepare deploy directory on server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            mkdir -p /opt/daojiawuxing/sql
+
+      - name: Upload SQL init scripts
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          source: "backend/sql"
+          target: "/opt/daojiawuxing"
+          overwrite: true
+          strip_components: 1
+
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v1
         env:
@@ -80,6 +102,7 @@ jobs:
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
           SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
@@ -90,7 +113,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          envs: COMPOSE_B64,REGISTRY,FRONTEND_IMAGE,BACKEND_IMAGE,ACR_USERNAME,ACR_PASSWORD,DB_HOST,DB_PORT,DB_NAME,DB_USERNAME,DB_PASSWORD,SPRING_DATASOURCE_URL,SPRING_DATASOURCE_USERNAME,SPRING_DATASOURCE_PASSWORD,DEPLOY_TARGET,IMAGE_TAG
+          envs: COMPOSE_B64,REGISTRY,FRONTEND_IMAGE,BACKEND_IMAGE,ACR_USERNAME,ACR_PASSWORD,DB_HOST,DB_PORT,DB_NAME,DB_USERNAME,DB_PASSWORD,DB_ROOT_PASSWORD,SPRING_DATASOURCE_URL,SPRING_DATASOURCE_USERNAME,SPRING_DATASOURCE_PASSWORD,DEPLOY_TARGET,IMAGE_TAG
           script: |
             set -e
             DEPLOY_DIR="/opt/daojiawuxing"
@@ -112,12 +135,13 @@ jobs:
 
             touch .env
 
-            DB_HOST_VALUE="${DB_HOST:-172.19.0.1}"
+            DB_HOST_VALUE="mysql"
             DB_PORT_VALUE="${DB_PORT:-3306}"
             DB_NAME_VALUE="${DB_NAME:-daojiawuxing}"
             DB_USERNAME_VALUE="${DB_USERNAME:-daojiawuxing}"
             DB_PASSWORD_VALUE="${DB_PASSWORD:-zhangsan@123}"
-            DEFAULT_JDBC_URL="jdbc:mysql://${DB_HOST_VALUE}:${DB_PORT_VALUE}/${DB_NAME_VALUE}?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=5000&socketTimeout=60000"
+            DB_ROOT_PASSWORD_VALUE="${DB_ROOT_PASSWORD:-root123456}"
+            DEFAULT_JDBC_URL="jdbc:mysql://mysql:${DB_PORT_VALUE}/${DB_NAME_VALUE}?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=10000&socketTimeout=60000"
 
             upsert_env "APP_PORT" "${APP_PORT:-8080}"
             upsert_env "DB_HOST" "${DB_HOST_VALUE}"
@@ -125,9 +149,10 @@ jobs:
             upsert_env "DB_NAME" "${DB_NAME_VALUE}"
             upsert_env "DB_USERNAME" "${DB_USERNAME_VALUE}"
             upsert_env "DB_PASSWORD" "${DB_PASSWORD_VALUE}"
-            upsert_env "SPRING_DATASOURCE_URL" "${SPRING_DATASOURCE_URL:-$DEFAULT_JDBC_URL}"
-            upsert_env "SPRING_DATASOURCE_USERNAME" "${SPRING_DATASOURCE_USERNAME:-$DB_USERNAME_VALUE}"
-            upsert_env "SPRING_DATASOURCE_PASSWORD" "${SPRING_DATASOURCE_PASSWORD:-$DB_PASSWORD_VALUE}"
+            upsert_env "DB_ROOT_PASSWORD" "${DB_ROOT_PASSWORD_VALUE}"
+            upsert_env "SPRING_DATASOURCE_URL" "${DEFAULT_JDBC_URL}"
+            upsert_env "SPRING_DATASOURCE_USERNAME" "${DB_USERNAME_VALUE}"
+            upsert_env "SPRING_DATASOURCE_PASSWORD" "${DB_PASSWORD_VALUE}"
             upsert_env "REDIS_HOST" "${REDIS_HOST:-localhost}"
             upsert_env "REDIS_PORT" "${REDIS_PORT:-6379}"
             upsert_env "REDIS_PASSWORD" "${REDIS_PASSWORD:-}"
