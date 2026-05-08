@@ -26,11 +26,12 @@ function buildQuery(params?: Record<string, unknown>) {
 }
 
 async function request<T>(path: string, init: RequestInit = {}) {
+  const isFormData = init.body instanceof FormData
   const response = await fetch(`${API_PREFIX}${path}`, {
     credentials: 'include',
     ...init,
     headers: {
-      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+      ...(init.body && !isFormData ? { 'Content-Type': 'application/json' } : {}),
       ...(init.headers ?? {})
     }
   })
@@ -54,9 +55,10 @@ export function apiGet<T>(path: string, params?: Record<string, unknown>) {
 }
 
 export function apiPost<T>(path: string, body?: unknown, params?: Record<string, unknown>) {
+  const isFormData = body instanceof FormData
   return request<T>(`${path}${buildQuery(params)}`, {
     method: 'POST',
-    body: body === undefined ? undefined : JSON.stringify(body)
+    body: body === undefined ? undefined : (isFormData ? body as FormData : JSON.stringify(body))
   })
 }
 
