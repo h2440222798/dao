@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.yuoj.mapper.UserBaziProfileMapper">
+    <resultMap id="BaseResultMap" type="com.yupi.yuoj.model.entity.UserBaziProfile">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="gender" column="gender" jdbcType="VARCHAR"/>
+        <result property="birthDate" column="birthDate" jdbcType="VARCHAR"/>
+        <result property="birthTime" column="birthTime" jdbcType="VARCHAR"/>
+        <result property="birthPlace" column="birthPlace" jdbcType="VARCHAR"/>
+        <result property="useTrueSolarTime" column="useTrueSolarTime" jdbcType="TINYINT"/>
+        <result property="calendarType" column="calendarType" jdbcType="VARCHAR"/>
+        <result property="yearPillar" column="yearPillar" jdbcType="VARCHAR"/>
+        <result property="monthPillar" column="monthPillar" jdbcType="VARCHAR"/>
+        <result property="dayPillar" column="dayPillar" jdbcType="VARCHAR"/>
+        <result property="hourPillar" column="hourPillar" jdbcType="VARCHAR"/>
+        <result property="dayMaster" column="dayMaster" jdbcType="VARCHAR"/>
+        <result property="dayMasterElement" column="dayMasterElement" jdbcType="VARCHAR"/>
+        <result property="baziJson" column="baziJson" jdbcType="LONGVARCHAR"/>
+        <result property="todayJson" column="todayJson" jdbcType="LONGVARCHAR"/>
+        <result property="aiJson" column="aiJson" jdbcType="LONGVARCHAR"/>
+        <result property="aiAnalysis" column="aiAnalysis" jdbcType="LONGVARCHAR"/>
+        <result property="constitutionSummary" column="constitutionSummary" jdbcType="LONGVARCHAR"/>
+        <result property="healthAdvice" column="healthAdvice" jdbcType="LONGVARCHAR"/>
+        <result property="wood" column="wood" jdbcType="INTEGER"/>
+        <result property="fire" column="fire" jdbcType="INTEGER"/>
+        <result property="earth" column="earth" jdbcType="INTEGER"/>
+        <result property="metal" column="metal" jdbcType="INTEGER"/>
+        <result property="water" column="water" jdbcType="INTEGER"/>
+        <result property="analyzedAt" column="analyzedAt" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,gender,birthDate,birthTime,birthPlace,useTrueSolarTime,calendarType,
+        yearPillar,monthPillar,dayPillar,hourPillar,dayMaster,dayMasterElement,
+        baziJson,todayJson,aiJson,aiAnalysis,constitutionSummary,healthAdvice,
+        wood,fire,earth,metal,water,analyzedAt,createTime,updateTime,isDelete
+    </sql>
+</mapper>
