@@ -53,6 +53,12 @@ const router = createRouter({
       meta: { title: '修行详情' }
     },
     {
+      path: '/wuxing3d',
+      name: 'wuxing3d',
+      component: () => import('@/views/Wuxing3DView.vue'),
+      meta: { title: '五行体质 · 3D全景', requiresAuth: true }
+    },
+    {
       path: '/growth',
       name: 'growth',
       component: () => import('@/views/GrowthView.vue'),
@@ -135,6 +141,12 @@ const router = createRouter({
       name: 'profile',
       component: () => import('@/views/ProfileView.vue'),
       meta: { title: '个人中心 - AI问道', requiresAuth: true }
+    },
+    {
+      path: '/bazi/relation',
+      name: 'bazi-relation',
+      component: () => import('@/views/BaziRelationView.vue'),
+      meta: { title: '个人关系画像 - AI问道', requiresAuth: true }
     },
     {
       path: '/admin',

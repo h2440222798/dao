@@ -14,7 +14,8 @@ import {
   User,
   UserFilled,
   Setting,
-  ArrowDown
+  ArrowDown,
+  Connection
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -90,9 +91,17 @@ const handleNavClick = (path: string) => {
               <el-icon><ArrowDown /></el-icon>
             </span>
             <template #dropdown>
-              <el-dropdown-menu>
+              <el-dropdown-menu class="user-dropdown">
+                <el-dropdown-item class="dropdown-item-3d" @click="router.push('/wuxing3d')">
+                  <span class="item-3d-icon">✦</span>
+                  <span class="item-3d-text">3D 五行全景</span>
+                  <span class="item-3d-badge">NEW</span>
+                </el-dropdown-item>
                 <el-dropdown-item @click="router.push('/profile')">
                   <el-icon><User /></el-icon>个人中心
+                </el-dropdown-item>
+                <el-dropdown-item @click="router.push('/bazi/relation')">
+                  <el-icon><Connection /></el-icon>关系画像
                 </el-dropdown-item>
                 <el-dropdown-item @click="router.push('/growth')">
                   <el-icon><Grid /></el-icon>五行成长
@@ -152,8 +161,14 @@ const handleNavClick = (path: string) => {
             <el-avatar :size="48" :src="userStore.currentUser?.avatar" />
             <span class="mobile-username">{{ userStore.currentUser?.nickname }}</span>
           </div>
+          <el-button class="mobile-3d-btn" @click="handleNavClick('/wuxing3d')">
+            ✦ 3D 五行全景
+          </el-button>
           <el-button type="primary" @click="handleNavClick('/profile')">
             <el-icon><User /></el-icon>个人中心
+          </el-button>
+          <el-button type="primary" plain @click="handleNavClick('/bazi/relation')">
+            <el-icon><Connection /></el-icon>关系画像
           </el-button>
           <el-button type="primary" plain @click="handleNavClick('/growth')">
             <el-icon><Grid /></el-icon>五行成长
@@ -370,6 +385,86 @@ const handleNavClick = (path: string) => {
       font-size: 16px;
       font-weight: 500;
       color: #2a2620;
+    }
+  }
+
+  .mobile-3d-btn {
+    background: linear-gradient(135deg, #e8f5ec 0%, #e0f0fa 50%, #fde8e0 100%);
+    border: 1px solid rgba(90, 143, 110, 0.3);
+    color: #3d6b4e;
+    font-weight: 500;
+  }
+}
+</style>
+
+<style lang="scss">
+.user-dropdown {
+  padding: 6px !important;
+  min-width: 180px;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+
+  .el-dropdown-menu__item {
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 2px 0;
+    font-size: 14px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f5f3f0;
+    }
+  }
+
+  .dropdown-item-3d {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #e8f5ec 0%, #e0f0fa 50%, #fde8e0 100%);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 6px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, #d4eedd 0%, #cce8f5 50%, #fcddd0 100%);
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    .item-3d-icon {
+      font-size: 16px;
+      color: #5a8f6e;
+    }
+
+    .item-3d-text {
+      font-weight: 600;
+      color: #3d6b4e;
+      font-size: 14px;
+    }
+
+    .item-3d-badge {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #5a8f6e, #4a7a98);
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
     }
   }
 }

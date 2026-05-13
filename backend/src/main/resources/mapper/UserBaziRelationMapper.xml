@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.yuoj.mapper.UserBaziRelationMapper">
+    <resultMap id="BaseResultMap" type="com.yupi.yuoj.model.entity.UserBaziRelation">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="baziProfileId" column="baziProfileId" jdbcType="BIGINT"/>
+        <result property="currentCity" column="currentCity" jdbcType="VARCHAR"/>
+        <result property="relationshipStatus" column="relationshipStatus" jdbcType="VARCHAR"/>
+        <result property="careerStage" column="careerStage" jdbcType="VARCHAR"/>
+        <result property="focusQuestion" column="focusQuestion" jdbcType="VARCHAR"/>
+        <result property="relationJson" column="relationJson" jdbcType="LONGVARCHAR"/>
+        <result property="aiSummary" column="aiSummary" jdbcType="LONGVARCHAR"/>
+        <result property="relationshipAdvice" column="relationshipAdvice" jdbcType="LONGVARCHAR"/>
+        <result property="marriageAdvice" column="marriageAdvice" jdbcType="LONGVARCHAR"/>
+        <result property="careerAdvice" column="careerAdvice" jdbcType="LONGVARCHAR"/>
+        <result property="wealthAdvice" column="wealthAdvice" jdbcType="LONGVARCHAR"/>
+        <result property="luckyCities" column="luckyCities" jdbcType="LONGVARCHAR"/>
+        <result property="luckyDirections" column="luckyDirections" jdbcType="LONGVARCHAR"/>
+        <result property="fortunateElements" column="fortunateElements" jdbcType="LONGVARCHAR"/>
+        <result property="scoreJson" column="scoreJson" jdbcType="LONGVARCHAR"/>
+        <result property="analyzedAt" column="analyzedAt" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,baziProfileId,currentCity,relationshipStatus,careerStage,focusQuestion,
+        relationJson,aiSummary,relationshipAdvice,marriageAdvice,careerAdvice,wealthAdvice,
+        luckyCities,luckyDirections,fortunateElements,scoreJson,analyzedAt,createTime,updateTime,isDelete
+    </sql>
+</mapper>

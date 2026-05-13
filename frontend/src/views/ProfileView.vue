@@ -276,41 +276,54 @@ onMounted(async () => {
           </div>
 
           <div class="avatar-stage">
-            <div class="energy-rings">
-              <span
+            <div class="stage-deco">
+              <div class="lotus-bg"></div>
+              <div class="ink-circle"></div>
+              <div class="ink-circle ink-circle-2"></div>
+            </div>
+
+            <div class="wuxing-mandala">
+              <div class="cycle-lines">
+                <svg viewBox="0 0 300 300" class="cycle-svg">
+                  <polygon points="150,30 270,120 230,260 70,260 30,120" class="cycle-path" />
+                  <polygon points="150,30 270,120 230,260 70,260 30,120" class="cycle-path-glow" />
+                </svg>
+              </div>
+
+              <div
                 v-for="(item, index) in elementData"
                 :key="item.key"
-                class="energy-ring"
+                class="element-orb"
+                :class="{ dominant: item.key === dominantElement.key }"
                 :style="{
-                  '--ring-color': item.color,
-                  '--ring-glow': item.glow,
-                  '--ring-scale': `${0.72 + item.value / 140}`,
-                  '--ring-rotate': `${index * 34}deg`
+                  '--orb-color': item.color,
+                  '--orb-glow': item.glow,
+                  '--orb-angle': `${index * 72 - 90}deg`,
+                  '--orb-size': item.key === dominantElement.key ? '72px' : '56px',
+                  '--orb-power': item.value / 100
                 }"
-              />
+              >
+                <span class="orb-char">{{ item.name }}</span>
+                <span class="orb-value">{{ item.value }}</span>
+                <span class="orb-ring"></span>
+              </div>
+
+              <div class="center-lotus">
+                <svg viewBox="0 0 80 80" class="lotus-svg">
+                  <circle cx="40" cy="40" r="28" class="lotus-outer" />
+                  <path d="M40,12 C44,24 52,30 40,40 C28,30 36,24 40,12" class="petal" />
+                  <path d="M40,12 C44,24 52,30 40,40 C28,30 36,24 40,12" class="petal" style="transform: rotate(72deg); transform-origin: 40px 40px;" />
+                  <path d="M40,12 C44,24 52,30 40,40 C28,30 36,24 40,12" class="petal" style="transform: rotate(144deg); transform-origin: 40px 40px;" />
+                  <path d="M40,12 C44,24 52,30 40,40 C28,30 36,24 40,12" class="petal" style="transform: rotate(216deg); transform-origin: 40px 40px;" />
+                  <path d="M40,12 C44,24 52,30 40,40 C28,30 36,24 40,12" class="petal" style="transform: rotate(288deg); transform-origin: 40px 40px;" />
+                  <circle cx="40" cy="40" r="8" class="lotus-core" :style="{ fill: dominantElement.color }" />
+                </svg>
+                <span class="center-text">{{ dominantElement.name }}主</span>
+              </div>
             </div>
-            <div class="element-person">
-              <div class="person-head">
-                <span class="node node-metal" :style="{ '--node-power': `${currentScores.metal}%` }" />
-              </div>
-              <div class="person-torso">
-                <span class="meridian center" />
-                <span class="meridian left" />
-                <span class="meridian right" />
-                <span class="node node-fire" :style="{ '--node-power': `${currentScores.fire}%` }" />
-                <span class="node node-earth" :style="{ '--node-power': `${currentScores.earth}%` }" />
-                <span class="node node-water" :style="{ '--node-power': `${currentScores.water}%` }" />
-              </div>
-              <div class="person-arms">
-                <span class="arm left-arm" />
-                <span class="arm right-arm" />
-                <span class="node node-wood left-node" :style="{ '--node-power': `${currentScores.wood}%` }" />
-                <span class="node node-wood right-node" :style="{ '--node-power': `${currentScores.wood}%` }" />
-              </div>
-              <div class="person-legs">
-                <span class="leg left-leg" />
-                <span class="leg right-leg" />
-              </div>
+
+            <div class="stage-footer">
+              <span class="footer-hint">{{ dominantElement.name }}行偏旺 · {{ elementMeta[dominantElement.key].organ }}为先天之本</span>
             </div>
           </div>
 
@@ -488,9 +501,8 @@ onMounted(async () => {
 .profile-view {
   min-height: 100vh;
   padding: 88px 0 56px;
-  color: #eef7ee;
-  background:
-    linear-gradient(135deg, #07110d 0%, #14231b 48%, #11120f 100%);
+  color: #3a3530;
+  background: linear-gradient(160deg, #f7f5f0 0%, #eef0e8 40%, #f5f2ed 100%);
 }
 
 .profile-container {
@@ -499,10 +511,11 @@ onMounted(async () => {
 }
 
 .panel {
-  border: 1px solid rgba(228, 238, 225, 0.14);
-  border-radius: 8px;
-  background: rgba(9, 18, 14, 0.84);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(90, 143, 110, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 24px rgba(90, 143, 110, 0.06);
 }
 
 .panel-title {
@@ -513,9 +526,10 @@ onMounted(async () => {
   margin-bottom: 18px;
   font-size: 16px;
   font-weight: 700;
+  color: #3a3530;
 
   .el-icon {
-    color: #d6a34f;
+    color: #5a8f6e;
   }
 }
 
@@ -539,7 +553,7 @@ onMounted(async () => {
   min-width: 0;
 
   .eyebrow {
-    color: #9edbb5;
+    color: #5a8f6e;
     font-size: 13px;
     margin-bottom: 4px;
   }
@@ -548,23 +562,24 @@ onMounted(async () => {
     margin: 0;
     font-size: 26px;
     line-height: 1.2;
+    color: #2a2620;
     overflow-wrap: anywhere;
   }
 
   p {
     margin: 6px 0 0;
-    color: rgba(238, 247, 238, 0.66);
+    color: #8a8680;
   }
 }
 
 .dominant-chip {
-  --chip-color: #44d37b;
+  --chip-color: #5a8f6e;
   flex-shrink: 0;
-  padding: 8px 12px;
-  border: 1px solid color-mix(in srgb, var(--chip-color), transparent 40%);
+  padding: 8px 14px;
+  border: 1px solid color-mix(in srgb, var(--chip-color), transparent 50%);
   border-radius: 999px;
   color: var(--chip-color);
-  background: color-mix(in srgb, var(--chip-color), transparent 88%);
+  background: color-mix(in srgb, var(--chip-color), transparent 90%);
   font-weight: 700;
 }
 
@@ -592,202 +607,221 @@ onMounted(async () => {
 
 .avatar-stage {
   position: relative;
-  min-height: 340px;
-  display: grid;
-  place-items: center;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  border: 1px solid rgba(238, 247, 238, 0.1);
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
-    #08130f;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 45%, #f5faf6 0%, #edf4ee 50%, #e6ede4 100%);
+  border: 1px solid rgba(90, 143, 110, 0.12);
+  padding: 30px 20px 16px;
 }
 
-.energy-rings {
+.stage-deco {
   position: absolute;
-  inset: 28px;
-  display: grid;
-  place-items: center;
+  inset: 0;
+  pointer-events: none;
 }
 
-.energy-ring {
-  --ring-color: #44d37b;
-  --ring-glow: rgba(68, 211, 123, 0.32);
-  --ring-scale: 1;
-  --ring-rotate: 0deg;
+.lotus-bg {
   position: absolute;
-  width: 220px;
-  height: 220px;
-  border: 1px solid var(--ring-color);
-  border-radius: 50%;
-  opacity: 0.5;
-  transform: rotate(var(--ring-rotate)) scale(var(--ring-scale));
-  box-shadow: 0 0 30px var(--ring-glow);
-  animation: orbitPulse 5s ease-in-out infinite;
-}
-
-.element-person {
-  position: relative;
-  width: 180px;
-  height: 270px;
-  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.42));
-}
-
-.person-head,
-.person-torso,
-.person-arms,
-.person-legs {
-  position: absolute;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-}
-
-.person-head {
-  top: 6px;
-  width: 64px;
-  height: 64px;
-  border: 2px solid rgba(238, 247, 238, 0.55);
+  width: 320px;
+  height: 320px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: rgba(238, 247, 238, 0.08);
+  background: radial-gradient(circle, rgba(90, 143, 110, 0.06) 0%, transparent 70%);
 }
 
-.person-torso {
-  top: 78px;
-  width: 92px;
-  height: 130px;
-  border: 2px solid rgba(238, 247, 238, 0.42);
-  border-radius: 44px 44px 28px 28px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+.ink-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(90, 143, 110, 0.1);
+  border-radius: 50%;
+  animation: gentleSpin 60s linear infinite;
 }
 
-.person-arms {
-  top: 96px;
-  width: 174px;
+.ink-circle-2 {
+  width: 310px;
+  height: 310px;
+  border-style: dashed;
+  border-color: rgba(90, 143, 110, 0.07);
+  animation-direction: reverse;
+  animation-duration: 80s;
+}
+
+.wuxing-mandala {
+  position: relative;
+  width: 280px;
+  height: 280px;
+}
+
+.cycle-lines {
+  position: absolute;
+  inset: 0;
+}
+
+.cycle-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cycle-path {
+  fill: none;
+  stroke: rgba(90, 143, 110, 0.15);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+
+.cycle-path-glow {
+  fill: rgba(90, 143, 110, 0.02);
+  stroke: none;
+}
+
+.element-orb {
+  --orb-color: #5a8f6e;
+  --orb-glow: rgba(90, 143, 110, 0.3);
+  --orb-angle: 0deg;
+  --orb-size: 56px;
+  --orb-power: 0.2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--orb-size);
+  height: var(--orb-size);
+  margin-left: calc(var(--orb-size) / -2);
+  margin-top: calc(var(--orb-size) / -2);
+  transform: rotate(var(--orb-angle)) translateY(-115px) rotate(calc(-1 * var(--orb-angle)));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid color-mix(in srgb, var(--orb-color), transparent 30%);
+  box-shadow:
+    0 4px 16px color-mix(in srgb, var(--orb-color), transparent 70%),
+    inset 0 0 12px color-mix(in srgb, var(--orb-color), transparent 85%);
+  transition: all 0.4s ease;
+  animation: orbFloat 4s ease-in-out infinite;
+  animation-delay: calc(var(--orb-power) * -3s);
+
+  &.dominant {
+    background: color-mix(in srgb, var(--orb-color), #fff 80%);
+    border-width: 3px;
+    box-shadow:
+      0 6px 24px color-mix(in srgb, var(--orb-color), transparent 50%),
+      inset 0 0 16px color-mix(in srgb, var(--orb-color), transparent 75%),
+      0 0 40px color-mix(in srgb, var(--orb-color), transparent 70%);
+  }
+}
+
+.orb-char {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--orb-color);
+  line-height: 1;
+  font-family: 'STSong', 'SimSun', 'Noto Serif SC', serif;
+}
+
+.orb-value {
+  font-size: 11px;
+  color: var(--orb-color);
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.orb-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--orb-color), transparent 60%);
+  opacity: calc(var(--orb-power) * 0.8);
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+.center-lotus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lotus-svg {
+  width: 80px;
   height: 80px;
 }
 
-.arm,
-.leg {
+.lotus-outer {
+  fill: rgba(255, 255, 255, 0.6);
+  stroke: rgba(90, 143, 110, 0.25);
+  stroke-width: 1;
+}
+
+.petal {
+  fill: rgba(90, 143, 110, 0.12);
+  stroke: rgba(90, 143, 110, 0.3);
+  stroke-width: 0.5;
+}
+
+.lotus-core {
+  opacity: 0.8;
+  animation: corePulse 3s ease-in-out infinite;
+}
+
+.center-text {
   position: absolute;
-  display: block;
-  border-radius: 999px;
-  background: rgba(238, 247, 238, 0.42);
+  bottom: -4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #5a8f6e;
+  white-space: nowrap;
 }
 
-.left-arm,
-.right-arm {
-  top: 10px;
-  width: 72px;
-  height: 10px;
+.stage-footer {
+  margin-top: 16px;
+  z-index: 2;
 }
 
-.left-arm {
-  left: 0;
-  transform: rotate(-24deg);
+.footer-hint {
+  font-size: 12px;
+  color: #8a8680;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 5px 14px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
 }
 
-.right-arm {
-  right: 0;
-  transform: rotate(24deg);
+@keyframes gentleSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-.person-legs {
-  top: 206px;
-  width: 86px;
-  height: 58px;
+@keyframes orbFloat {
+  0%, 100% { margin-top: calc(var(--orb-size) / -2); }
+  50% { margin-top: calc(var(--orb-size) / -2 - 4px); }
 }
 
-.leg {
-  top: 0;
-  width: 12px;
-  height: 68px;
+@keyframes ringPulse {
+  0%, 100% { transform: scale(1); opacity: calc(var(--orb-power, 0.2) * 0.6); }
+  50% { transform: scale(1.12); opacity: calc(var(--orb-power, 0.2) * 1); }
 }
 
-.left-leg {
-  left: 26px;
-  transform: rotate(8deg);
-}
-
-.right-leg {
-  right: 26px;
-  transform: rotate(-8deg);
-}
-
-.meridian {
-  position: absolute;
-  top: 14px;
-  bottom: 14px;
-  width: 2px;
-  border-radius: 999px;
-  background: rgba(214, 163, 79, 0.5);
-}
-
-.meridian.center {
-  left: 50%;
-}
-
-.meridian.left {
-  left: 34%;
-  background: rgba(68, 211, 123, 0.35);
-}
-
-.meridian.right {
-  right: 34%;
-  background: rgba(74, 140, 255, 0.35);
-}
-
-.node {
-  --node-power: 20%;
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  box-shadow: 0 0 calc(10px + var(--node-power) / 3) currentColor;
-  transform: scale(calc(0.8 + var(--node-power) / 120));
-  animation: nodeBreath 2.8s ease-in-out infinite;
-}
-
-.node-metal {
-  left: 24px;
-  top: 24px;
-  color: #dbe5f2;
-  background: #dbe5f2;
-}
-
-.node-fire {
-  left: 39px;
-  top: 24px;
-  color: #ff5c4d;
-  background: #ff5c4d;
-}
-
-.node-earth {
-  left: 39px;
-  top: 62px;
-  color: #d6a34f;
-  background: #d6a34f;
-}
-
-.node-water {
-  left: 39px;
-  top: 102px;
-  color: #4a8cff;
-  background: #4a8cff;
-}
-
-.node-wood {
-  color: #44d37b;
-  background: #44d37b;
-}
-
-.left-node {
-  left: 20px;
-  top: 28px;
-}
-
-.right-node {
-  right: 20px;
-  top: 28px;
+@keyframes corePulse {
+  0%, 100% { opacity: 0.7; r: 8; }
+  50% { opacity: 1; r: 9; }
 }
 
 .element-bars {
@@ -797,8 +831,8 @@ onMounted(async () => {
 }
 
 .element-row {
-  --element-color: #44d37b;
-  --element-glow: rgba(68, 211, 123, 0.3);
+  --element-color: #5a8f6e;
+  --element-glow: rgba(90, 143, 110, 0.3);
   --element-value: 20%;
   display: grid;
   grid-template-columns: 72px 1fr 44px;
@@ -820,16 +854,16 @@ onMounted(async () => {
   }
 
   span {
-    color: rgba(238, 247, 238, 0.58);
+    color: #8a8680;
     font-size: 12px;
   }
 }
 
 .element-track {
-  height: 9px;
+  height: 8px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(238, 247, 238, 0.1);
+  background: rgba(90, 143, 110, 0.08);
 
   span {
     display: block;
@@ -837,7 +871,8 @@ onMounted(async () => {
     height: 100%;
     border-radius: inherit;
     background: var(--element-color);
-    box-shadow: 0 0 16px var(--element-glow);
+    box-shadow: 0 0 12px var(--element-glow);
+    transition: width 0.6s ease;
   }
 }
 
@@ -865,14 +900,14 @@ onMounted(async () => {
 
   div {
     padding: 12px;
-    border: 1px solid rgba(238, 247, 238, 0.11);
+    border: 1px solid rgba(90, 143, 110, 0.12);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(90, 143, 110, 0.04);
   }
 
   span {
     display: block;
-    color: rgba(238, 247, 238, 0.58);
+    color: #8a8680;
     font-size: 12px;
   }
 
@@ -880,6 +915,7 @@ onMounted(async () => {
     display: block;
     margin-top: 4px;
     font-size: 20px;
+    color: #3a3530;
   }
 }
 
@@ -887,7 +923,7 @@ onMounted(async () => {
 .master-panel p,
 .ai-panel p,
 .advice-panel p {
-  color: rgba(238, 247, 238, 0.78);
+  color: #5a5650;
   line-height: 1.8;
   overflow-wrap: anywhere;
 }
@@ -897,7 +933,7 @@ onMounted(async () => {
   align-items: center;
   gap: 8px;
   margin-top: 14px;
-  color: #ffbe68;
+  color: #c75b39;
   font-weight: 700;
 }
 
@@ -906,7 +942,7 @@ onMounted(async () => {
   display: grid;
   gap: 8px;
   margin-top: 12px;
-  color: rgba(238, 247, 238, 0.72);
+  color: #5a5650;
 }
 
 .clash-list div,
@@ -914,7 +950,7 @@ onMounted(async () => {
 .notice {
   padding: 10px 12px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(90, 143, 110, 0.05);
 }
 
 .detail-grid,
@@ -938,25 +974,25 @@ onMounted(async () => {
 .pillar-tile {
   min-height: 150px;
   padding: 14px;
-  border: 1px solid rgba(238, 247, 238, 0.12);
+  border: 1px solid rgba(90, 143, 110, 0.12);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(90, 143, 110, 0.03);
 
   span {
-    color: rgba(238, 247, 238, 0.58);
+    color: #8a8680;
   }
 
   strong {
     display: block;
     margin: 8px 0;
-    color: #fff7d8;
+    color: #3d6b4e;
     font-size: 28px;
   }
 
   p,
   small {
     display: block;
-    color: rgba(238, 247, 238, 0.72);
+    color: #5a5650;
     line-height: 1.6;
   }
 }
@@ -969,25 +1005,25 @@ onMounted(async () => {
 
   strong {
     font-size: 54px;
-    color: #fff7d8;
+    color: #3d6b4e;
     line-height: 1;
   }
 
   span {
     padding-bottom: 6px;
-    color: #9edbb5;
+    color: #5a8f6e;
     font-weight: 700;
   }
 }
 
 .muted {
-  color: rgba(238, 247, 238, 0.58) !important;
+  color: #8a8680 !important;
 }
 
 .advice-panel {
   h3 {
     margin: 0 0 12px;
-    color: #fff7d8;
+    color: #3a3530;
     font-size: 20px;
     line-height: 1.5;
   }
@@ -995,51 +1031,50 @@ onMounted(async () => {
   small {
     display: block;
     margin-top: 12px;
-    color: rgba(238, 247, 238, 0.52);
+    color: #8a8680;
   }
 }
 
 .notice {
   margin-top: 14px;
-  color: #ffcf86;
+  color: #c75b39;
 }
 
 :deep(.el-form-item__label),
 :deep(.el-checkbox__label) {
-  color: rgba(238, 247, 238, 0.76);
+  color: #5a5650;
 }
 
 :deep(.el-input__wrapper),
 :deep(.el-textarea__inner),
 :deep(.el-select__wrapper),
 :deep(.el-date-editor.el-input__wrapper) {
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 1px rgba(238, 247, 238, 0.12) inset;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 1px rgba(90, 143, 110, 0.15) inset;
 }
 
 :deep(.el-input__inner),
 :deep(.el-textarea__inner) {
-  color: #eef7ee;
+  color: #3a3530;
 }
 
-@keyframes orbitPulse {
-  0%,
-  100% {
-    opacity: 0.34;
-  }
-  50% {
-    opacity: 0.74;
-  }
+@keyframes gentleSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-@keyframes nodeBreath {
-  0%,
-  100% {
-    opacity: 0.68;
-  }
-  50% {
-    opacity: 1;
-  }
+@keyframes orbFloat {
+  0%, 100% { margin-top: calc(var(--orb-size) / -2); }
+  50% { margin-top: calc(var(--orb-size) / -2 - 4px); }
+}
+
+@keyframes ringPulse {
+  0%, 100% { transform: scale(1); opacity: calc(var(--orb-power, 0.2) * 0.6); }
+  50% { transform: scale(1.12); opacity: calc(var(--orb-power, 0.2) * 1); }
+}
+
+@keyframes corePulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }
 
 @media (max-width: 1100px) {
@@ -1079,12 +1114,17 @@ onMounted(async () => {
   }
 
   .avatar-stage {
-    min-height: 300px;
+    min-height: 320px;
   }
 
-  .energy-ring {
-    width: 188px;
-    height: 188px;
+  .bagua-ring {
+    width: 220px;
+    height: 220px;
+  }
+
+  .element-labels {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 </style>

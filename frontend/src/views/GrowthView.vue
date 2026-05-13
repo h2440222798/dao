@@ -3,7 +3,9 @@ import { computed, onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { usePracticeStore } from '@/stores/practice'
 import { growthTips } from '@/data/phase2'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const userStore = useUserStore()
 const practiceStore = usePracticeStore()
 const constitution = computed(() => userStore.currentUser?.constitution)
@@ -35,6 +37,7 @@ onMounted(async () => {
       <section class="hero-card">
         <h1>五行成长</h1>
         <p>把饮食、情绪、运动、冥想与认知练习沉淀成长期成长轨迹。</p>
+        <button class="view-3d-btn" @click="router.push('/wuxing3d')">查看 3D 五行全景 →</button>
       </section>
 
       <div class="content-grid">
@@ -112,6 +115,23 @@ onMounted(async () => {
 
 .hero-card {
   margin-bottom: $spacing-xl;
+}
+
+.view-3d-btn {
+  margin-top: $spacing-md;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, $primary-light, $primary);
+  color: $white;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($primary, 0.3);
+  }
 }
 
 .content-grid {
