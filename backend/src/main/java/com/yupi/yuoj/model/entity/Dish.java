@@ -2,6 +2,7 @@ package com.yupi.yuoj.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
 import lombok.Data;
@@ -142,7 +143,8 @@ public class Dish {
     /**
      * 是否删除
      */
-    private Integer isdelete;
+    @TableLogic
+    private Integer isDelete;
 
     @Override
     public boolean equals(Object that) {
@@ -181,7 +183,7 @@ public class Dish {
             && (this.getFavorites() == null ? other.getFavorites() == null : this.getFavorites().equals(other.getFavorites()))
             && (this.getCreatetime() == null ? other.getCreatetime() == null : this.getCreatetime().equals(other.getCreatetime()))
             && (this.getUpdatetime() == null ? other.getUpdatetime() == null : this.getUpdatetime().equals(other.getUpdatetime()))
-            && (this.getIsdelete() == null ? other.getIsdelete() == null : this.getIsdelete().equals(other.getIsdelete()));
+            && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
     }
 
     @Override
@@ -213,7 +215,7 @@ public class Dish {
         result = prime * result + ((getFavorites() == null) ? 0 : getFavorites().hashCode());
         result = prime * result + ((getCreatetime() == null) ? 0 : getCreatetime().hashCode());
         result = prime * result + ((getUpdatetime() == null) ? 0 : getUpdatetime().hashCode());
-        result = prime * result + ((getIsdelete() == null) ? 0 : getIsdelete().hashCode());
+        result = prime * result + ((getIsDelete() == null) ? 0 : getIsDelete().hashCode());
         return result;
     }
 
@@ -248,7 +250,7 @@ public class Dish {
         sb.append(", favorites=").append(favorites);
         sb.append(", createtime=").append(createtime);
         sb.append(", updatetime=").append(updatetime);
-        sb.append(", isdelete=").append(isdelete);
+        sb.append(", isDelete=").append(isDelete);
         sb.append("]");
         return sb.toString();
     }

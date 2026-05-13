@@ -30,7 +30,7 @@
             <result property="favorites" column="favorites" />
             <result property="createtime" column="createTime" />
             <result property="updatetime" column="updateTime" />
-            <result property="isdelete" column="isDelete" />
+            <result property="isDelete" column="isDelete" />
     </resultMap>
 
     <sql id="Base_Column_List">

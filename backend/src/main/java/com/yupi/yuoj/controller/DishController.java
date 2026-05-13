@@ -84,6 +84,7 @@ public class DishController {
             @RequestParam(defaultValue = "10") long pageSize, @RequestParam(required = false) String category) {
         ThrowUtils.throwIf(pageSize > 20, ErrorCode.PARAMS_ERROR);
         QueryWrapper<Dish> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("isDelete", 0);
         queryWrapper.eq(category != null && !category.trim().isEmpty(), "category", category);
         queryWrapper.orderByDesc("createTime");
         return ResultUtils.success(dishService.page(new Page<>(current, pageSize), queryWrapper));
