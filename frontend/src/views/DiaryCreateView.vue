@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useDiaryStore } from '@/stores/diary'
 import { ElMessage } from 'element-plus'
 import { Plus, Close } from '@element-plus/icons-vue'
+import { apiPost } from '@/utils/api'
 
 const router = useRouter()
 const diaryStore = useDiaryStore()
@@ -67,10 +68,18 @@ const removePractice = (practice: string) => {
   form.practices = form.practices.filter(p => p !== practice)
 }
 
-const handleImageUpload = (file: any) => {
-  // 模拟图片上传
-  const url = URL.createObjectURL(file.raw)
-  form.images.push(url)
+const handleImageUpload = async (file: any) => {
+  try {
+    const formData = new FormData()
+    formData.append('file', file.raw)
+    formData.append('biz', 'diary_image')
+
+    const url = await apiPost<string>('/file/upload', formData)
+    form.images.push(url)
+    ElMessage.success('图片上传成功')
+  } catch (error) {
+    ElMessage.error(error instanceof Error ? error.message : '上传失败，请重试')
+  }
   return false // 阻止自动上传
 }
 

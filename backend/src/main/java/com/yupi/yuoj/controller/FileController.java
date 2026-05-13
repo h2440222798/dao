@@ -4,9 +4,10 @@ import cn.hutool.core.io.FileUtil;
 import com.yupi.yuoj.common.BaseResponse;
 import com.yupi.yuoj.common.ErrorCode;
 import com.yupi.yuoj.common.ResultUtils;
+import com.yupi.yuoj.config.AliyunOssConfig;
 import com.yupi.yuoj.constant.FileConstant;
 import com.yupi.yuoj.exception.BusinessException;
-import com.yupi.yuoj.manager.CosManager;
+import com.yupi.yuoj.manager.OssManager;
 import com.yupi.yuoj.model.dto.file.UploadFileRequest;
 import com.yupi.yuoj.model.entity.User;
 import com.yupi.yuoj.model.enums.FileUploadBizEnum;
@@ -38,7 +39,10 @@ public class FileController {
     private UserService userService;
 
     @Resource
-    private CosManager cosManager;
+    private OssManager ossManager;
+
+    @Resource
+    private AliyunOssConfig aliyunOssConfig;
 
     /**
      * 文件上传
@@ -67,9 +71,12 @@ public class FileController {
             // 上传文件
             file = File.createTempFile(filepath, null);
             multipartFile.transferTo(file);
-            cosManager.putObject(filepath, file);
+            // 去除开头的 /
+            String ossKey = filepath.startsWith("/") ? filepath.substring(1) : filepath;
+            ossManager.putObject(ossKey, file);
             // 返回可访问地址
-            return ResultUtils.success(FileConstant.COS_HOST + filepath);
+            String host = aliyunOssConfig.getEndpoint().replace("https://", "https://" + aliyunOssConfig.getBucketName() + ".");
+            return ResultUtils.success(host + "/" + ossKey);
         } catch (Exception e) {
             log.error("file upload error, filepath = " + filepath, e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "上传失败");
@@ -99,6 +106,14 @@ public class FileController {
         if (FileUploadBizEnum.USER_AVATAR.equals(fileUploadBizEnum)) {
             if (fileSize > ONE_M) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件大小不能超过 1M");
+            }
+            if (!Arrays.asList("jpeg", "jpg", "svg", "png", "webp").contains(fileSuffix)) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件类型错误");
+            }
+        }
+        if (FileUploadBizEnum.DIARY_IMAGE.equals(fileUploadBizEnum)) {
+            if (fileSize > ONE_M * 5) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件大小不能超过 5M");
             }
             if (!Arrays.asList("jpeg", "jpg", "svg", "png", "webp").contains(fileSuffix)) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "文件类型错误");

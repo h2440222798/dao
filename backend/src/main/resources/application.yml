@@ -87,7 +87,14 @@ cos:
 # 代码沙箱配置
 codesandbox:
   type: remote
-
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    # 警告：千万不要把真实的 AK/SK 提交到代码仓库！请在运行环境通过环境变量配置，或使用不提交的 application-local.yml
+    accessKeyId: xxx
+    accessKeySecret: xxx
+    bucketName: woleigedoua
+    urlPrefix: https://woleigedoua.oss-cn-beijing.aliyuncs.com
 deepseek:
   base-url: ${DEEPSEEK_BASE_URL:https://api.deepseek.com}
   api-key: ${DEEPSEEK_API_KEY:}
