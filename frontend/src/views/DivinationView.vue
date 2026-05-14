@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {
   Collection,
@@ -36,7 +37,7 @@ interface CategoryResult {
 }
 
 interface DivinationResult {
-  recordId?: number
+  recordId?: string
   savedAt?: string
   signText?: string
   overall?: string
@@ -64,7 +65,7 @@ interface DivinationResult {
 }
 
 interface DivinationRecord {
-  id: number
+  id: string
   question?: string
   date?: string
   signTitle?: string
@@ -77,6 +78,7 @@ interface DivinationRecord {
 }
 
 const canvasRef = ref<HTMLCanvasElement>()
+const router = useRouter()
 const question = ref('')
 const extraInfo = ref('')
 const loading = ref(false)
@@ -291,6 +293,10 @@ async function loadRecentRecords() {
   } finally {
     recordsLoading.value = false
   }
+}
+
+function openRecordDetail(recordId: string) {
+  router.push(`/divination/${recordId}`)
 }
 
 function resizeCanvas() {
@@ -682,6 +688,7 @@ onBeforeUnmount(() => {
               :key="record.id"
               type="button"
               class="history-item"
+              @click="openRecordDetail(record.id)"
             >
               <span>{{ record.signTitle || '求签记录' }}</span>
               <strong>{{ record.hexagramName }} → {{ record.changedHexagramName }}</strong>

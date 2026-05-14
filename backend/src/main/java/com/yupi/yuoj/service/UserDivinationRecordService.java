@@ -20,4 +20,9 @@ public interface UserDivinationRecordService extends IService<UserDivinationReco
      * List latest records for current user.
      */
     List<Map<String, Object>> listMyRecords(Long userId, int limit);
+
+    /**
+     * Get one record detail for current user.
+     */
+    Map<String, Object> getMyRecordDetail(Long userId, Long recordId);
 }

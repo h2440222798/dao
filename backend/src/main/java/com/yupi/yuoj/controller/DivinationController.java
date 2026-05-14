@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,13 @@ public class DivinationController {
             HttpServletRequest request) {
         User loginUser = userService.getLoginUser(request);
         return ResultUtils.success(userDivinationRecordService.listMyRecords(loginUser.getId(), limit));
+    }
+
+    @GetMapping("/{id}")
+    public BaseResponse<Map<String, Object>> getRecordDetail(@PathVariable("id") Long id,
+            HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(userDivinationRecordService.getMyRecordDetail(loginUser.getId(), id));
     }
 
     @PostMapping("/analyze")

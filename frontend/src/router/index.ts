@@ -155,6 +155,12 @@ const router = createRouter({
       meta: { title: '求签问卜 - AI问道', requiresAuth: true }
     },
     {
+      path: '/divination/:id',
+      name: 'divination-detail',
+      component: () => import('@/views/DivinationDetailView.vue'),
+      meta: { title: '问卦详情 - AI问道', requiresAuth: true }
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('@/views/AdminView.vue'),

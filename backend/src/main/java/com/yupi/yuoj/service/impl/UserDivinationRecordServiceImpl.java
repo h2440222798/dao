@@ -65,6 +65,21 @@ public class UserDivinationRecordServiceImpl
         return result;
     }
 
+    @Override
+    public Map<String, Object> getMyRecordDetail(Long userId, Long recordId) {
+        if (userId == null || userId <= 0 || recordId == null || recordId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        UserDivinationRecord record = getOne(new QueryWrapper<UserDivinationRecord>()
+                .eq("id", recordId)
+                .eq("userId", userId)
+                .last("limit 1"));
+        if (record == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "问卦记录不存在");
+        }
+        return toDetail(record);
+    }
+
     private void validate(Long userId, DivinationAnalyzeRequest request) {
         if (userId == null || userId <= 0 || request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -146,6 +161,22 @@ public class UserDivinationRecordServiceImpl
         summary.put("actionPlan", readJson(record.getActionPlanJson()));
         summary.put("savedAt", formatDate(record.getAnalyzedAt()));
         return summary;
+    }
+
+    private Map<String, Object> toDetail(UserDivinationRecord record) {
+        Map<String, Object> detail = toSummary(record);
+        detail.put("userId", record.getUserId());
+        detail.put("extraInfo", record.getExtraInfo());
+        detail.put("lowerTrigram", record.getLowerTrigram());
+        detail.put("upperTrigram", record.getUpperTrigram());
+        detail.put("changedLowerTrigram", record.getChangedLowerTrigram());
+        detail.put("changedUpperTrigram", record.getChangedUpperTrigram());
+        detail.put("lines", readJson(record.getLinesJson()));
+        detail.put("movingLines", readJson(record.getMovingLinesJson()));
+        detail.put("request", readJson(record.getRequestJson()));
+        detail.put("ai", readJson(record.getAiJson()));
+        detail.put("updateTime", formatDate(record.getUpdateTime()));
+        return detail;
     }
 
     private Map<String, Object> readCategoryMap(UserDivinationRecord record) {
