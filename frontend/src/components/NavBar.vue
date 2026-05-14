@@ -15,7 +15,8 @@ import {
   UserFilled,
   Setting,
   ArrowDown,
-  Connection
+  Connection,
+  MagicStick
 } from '@element-plus/icons-vue'
 
 const route = useRoute()
@@ -103,6 +104,9 @@ const handleNavClick = (path: string) => {
                 <el-dropdown-item @click="router.push('/bazi/relation')">
                   <el-icon><Connection /></el-icon>关系画像
                 </el-dropdown-item>
+                <el-dropdown-item @click="router.push('/divination')">
+                  <el-icon><MagicStick /></el-icon>求签问卜
+                </el-dropdown-item>
                 <el-dropdown-item @click="router.push('/growth')">
                   <el-icon><Grid /></el-icon>五行成长
                 </el-dropdown-item>
@@ -169,6 +173,9 @@ const handleNavClick = (path: string) => {
           </el-button>
           <el-button type="primary" plain @click="handleNavClick('/bazi/relation')">
             <el-icon><Connection /></el-icon>关系画像
+          </el-button>
+          <el-button type="primary" plain @click="handleNavClick('/divination')">
+            <el-icon><MagicStick /></el-icon>求签问卜
           </el-button>
           <el-button type="primary" plain @click="handleNavClick('/growth')">
             <el-icon><Grid /></el-icon>五行成长

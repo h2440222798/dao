@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yupi.yuoj.mapper.UserDivinationRecordMapper">
+    <resultMap id="BaseResultMap" type="com.yupi.yuoj.model.entity.UserDivinationRecord">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="question" column="question" jdbcType="VARCHAR"/>
+        <result property="dateText" column="dateText" jdbcType="VARCHAR"/>
+        <result property="signNo" column="signNo" jdbcType="INTEGER"/>
+        <result property="signTitle" column="signTitle" jdbcType="VARCHAR"/>
+        <result property="signLevel" column="signLevel" jdbcType="VARCHAR"/>
+        <result property="hexagramName" column="hexagramName" jdbcType="VARCHAR"/>
+        <result property="changedHexagramName" column="changedHexagramName" jdbcType="VARCHAR"/>
+        <result property="lowerTrigram" column="lowerTrigram" jdbcType="VARCHAR"/>
+        <result property="upperTrigram" column="upperTrigram" jdbcType="VARCHAR"/>
+        <result property="changedLowerTrigram" column="changedLowerTrigram" jdbcType="VARCHAR"/>
+        <result property="changedUpperTrigram" column="changedUpperTrigram" jdbcType="VARCHAR"/>
+        <result property="linesJson" column="linesJson" jdbcType="LONGVARCHAR"/>
+        <result property="movingLinesJson" column="movingLinesJson" jdbcType="LONGVARCHAR"/>
+        <result property="extraInfo" column="extraInfo" jdbcType="VARCHAR"/>
+        <result property="requestJson" column="requestJson" jdbcType="LONGVARCHAR"/>
+        <result property="aiJson" column="aiJson" jdbcType="LONGVARCHAR"/>
+        <result property="signText" column="signText" jdbcType="VARCHAR"/>
+        <result property="overall" column="overall" jdbcType="LONGVARCHAR"/>
+        <result property="healthAnalysis" column="healthAnalysis" jdbcType="LONGVARCHAR"/>
+        <result property="relationshipAnalysis" column="relationshipAnalysis" jdbcType="LONGVARCHAR"/>
+        <result property="careerAnalysis" column="careerAnalysis" jdbcType="LONGVARCHAR"/>
+        <result property="wealthAnalysis" column="wealthAnalysis" jdbcType="LONGVARCHAR"/>
+        <result property="luckAnalysis" column="luckAnalysis" jdbcType="LONGVARCHAR"/>
+        <result property="liuyaoAnalysis" column="liuyaoAnalysis" jdbcType="LONGVARCHAR"/>
+        <result property="comprehensiveAnalysis" column="comprehensiveAnalysis" jdbcType="LONGVARCHAR"/>
+        <result property="actionPlanJson" column="actionPlanJson" jdbcType="LONGVARCHAR"/>
+        <result property="riskNotice" column="riskNotice" jdbcType="LONGVARCHAR"/>
+        <result property="analyzedAt" column="analyzedAt" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,question,dateText,signNo,signTitle,signLevel,hexagramName,changedHexagramName,
+        lowerTrigram,upperTrigram,changedLowerTrigram,changedUpperTrigram,linesJson,movingLinesJson,
+        extraInfo,requestJson,aiJson,signText,overall,healthAnalysis,relationshipAnalysis,careerAnalysis,
+        wealthAnalysis,luckAnalysis,liuyaoAnalysis,comprehensiveAnalysis,actionPlanJson,riskNotice,
+        analyzedAt,createTime,updateTime,isDelete
+    </sql>
+</mapper>

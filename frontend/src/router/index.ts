@@ -149,6 +149,12 @@ const router = createRouter({
       meta: { title: '个人关系画像 - AI问道', requiresAuth: true }
     },
     {
+      path: '/divination',
+      name: 'divination',
+      component: () => import('@/views/DivinationView.vue'),
+      meta: { title: '求签问卜 - AI问道', requiresAuth: true }
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('@/views/AdminView.vue'),

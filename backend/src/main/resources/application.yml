@@ -21,9 +21,17 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://101.34.246.109:3306/daojiawuxing
+    url: jdbc:mysql://101.34.246.109:3306/daojiawuxing?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&connectTimeout=10000&socketTimeout=60000
     username: root
     password: zhangsan@123
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 3
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      keepalive-time: 300000
   # Redis 配置
   # todo 需替换配置，然后取消注释
   redis:
